@@ -1,0 +1,77 @@
+<project name="cmakeant-test" basedir="." default="test">
+
+	<property name="cmakeant.jar" value="../cmakeant/cmakeant.jar"/>
+    <property name="ant.test.lib" value="./lib/ant-testutil.jar"/>
+
+	<property name="src.dir" value="src" />
+	<property name="classes.dir" value="classes" />
+
+    <property name="report.dir"   value="report"/>
+    <property name="junit.out.dir.xml"  value="${report.dir}/junit/xml"/>
+    <property name="junit.out.dir.html" value="${report.dir}/junit/html"/>
+
+    <path id="classpath.run">
+        <path path="${java.class.path}"/>
+        <path location="${cmakeant.jar}"/>
+    </path>
+
+    <path id="classpath.test">
+        <path refid="classpath.run"/>
+        <path location="${ant.project.name}.jar"/>
+        <path location="${ant.test.lib}"/>
+		<path location="classes" />
+   </path>
+
+    <target name="clean" description="Delete all generated files">
+        <delete failonerror="false" includeEmptyDirs="true">
+            <fileset dir="." includes="${ant.project.name}.jar"/>
+            <fileset dir="${classes.dir}/*"/>
+            <fileset dir="${report.dir}"/>
+        </delete>
+    </target>
+
+    <target name="compile" description="Compiles the Task">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpath="${ant.test.lib}"/>
+    </target>
+
+	<target name="jar">
+		<ant antfile="../cmakeant/build.xml" inheritAll="false" />
+	</target>
+
+    <target name="junit" description="Runs the unit tests" depends="jar">
+        <delete dir="${junit.out.dir.xml}"/>
+        <mkdir  dir="${junit.out.dir.xml}"/>
+        <junit printsummary="yes" haltonfailure="no">
+            <classpath refid="classpath.test"/>
+            <formatter type="xml"/>
+            <batchtest fork="yes" todir="${junit.out.dir.xml}">
+                <fileset dir="${src.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="junitreport" description="Create a report for the rest result">
+        <mkdir dir="${junit.out.dir.html}"/>
+        <junitreport todir="${junit.out.dir.html}">
+            <fileset dir="${junit.out.dir.xml}">
+                <include name="*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.out.dir.html}"/>
+        </junitreport>
+    </target>
+
+    <target name="test"
+            depends="junit,junitreport"
+            description="Runs unit tests and creates a report"
+    />
+
+
+
+    <target name="test.basic" description="Test the task" depends="jar">
+        <taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${cmakeant.jar}"/>
+        <cmake sourceDir="cmake/src" binaryDir="cmake/binary">
+			<generator name="KDevelop3" />
+			<generator name="Unix Makefiles" platform="linux" />
+		</cmake>
+    </target>
+</project>
