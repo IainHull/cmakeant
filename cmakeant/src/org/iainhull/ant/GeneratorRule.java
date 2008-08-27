@@ -24,17 +24,20 @@ public class GeneratorRule {
 	}
 	
 	public boolean matches(String os) {
+		if (platform == null)
+			return true;
+		
         String p = platform.toUpperCase();
         String o = os.toUpperCase();
         
-		return p == null || p.indexOf(o) >= 0 || o.indexOf(p) >= 0;
+		return p.indexOf(o) >= 0 || o.indexOf(p) >= 0;
 	}
 	
 	public String toString() {
 		return (isDefault() ? "<default>" : platform) + ": " + name;
 	}
 
-	private boolean isDefault() {
+	public boolean isDefault() {
 		return platform == null || platform.equals("");
 	}
 }

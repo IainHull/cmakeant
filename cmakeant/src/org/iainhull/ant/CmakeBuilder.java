@@ -98,7 +98,7 @@ public class CmakeBuilder extends Task {
 		executeCmakeVars(vars);
 	}
 
-	private CacheVariables readCacheVariables() {
+	CacheVariables readCacheVariables() {
 		File cache = new File(binaryDir, CMAKE_CACHE);
 		CacheVariables vars;
 		try {
@@ -185,7 +185,7 @@ public class CmakeBuilder extends Task {
 	 * @throws IOException
 	 * 		if the command results in an IOException
 	 */
-	private int doExecute(String [] commandLine, File workingDirectory) throws IOException {
+	int doExecute(String [] commandLine, File workingDirectory) throws IOException {
 		Execute exec = new Execute();
 		
 		exec.setWorkingDirectory(workingDirectory);
@@ -201,7 +201,7 @@ public class CmakeBuilder extends Task {
 	}
 	
 	
-	private void testPaths() {
+	void testPaths() {
 		if (sourceDir == null) {
 			throw new BuildException("Source directory not set");
 		}

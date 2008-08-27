@@ -26,6 +26,9 @@ public class CacheVariables {
 		}
 	}
 
+	public CacheVariables() {
+	}
+
 	private void readLine(String line) {
 		if (!isLineEmpty(line) && !isLineComment(line)) {
 			addVariable(line);
@@ -46,7 +49,7 @@ public class CacheVariables {
 			String value = line.substring(equalPos + 1);
 			
 			// System.out.println(name);
-			vars.put(name, new Variable(name, type, value));
+			addVariable(new Variable(name, type, value));
 		}
 	}
 	
@@ -56,5 +59,9 @@ public class CacheVariables {
 
 	private boolean isLineEmpty(String line) {
 		return line == null || line.length() == 0;
+	}
+
+	public void addVariable(Variable v) {
+		vars.put(v.getName(), v);	
 	}
 }
