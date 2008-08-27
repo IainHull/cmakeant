@@ -24,7 +24,10 @@ public class GeneratorRule {
 	}
 	
 	public boolean matches(String os) {
-		return platform == null || platform.indexOf(os) > 0 || os.indexOf(platform) > 0;
+        String p = platform.toUpperCase();
+        String o = os.toUpperCase();
+        
+		return p == null || p.indexOf(o) >= 0 || o.indexOf(p) >= 0;
 	}
 	
 	public String toString() {

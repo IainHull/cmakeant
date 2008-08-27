@@ -27,6 +27,7 @@
             <fileset dir="." includes="${ant.project.name}.jar"/>
             <fileset dir="${classes.dir}/*"/>
             <fileset dir="${report.dir}"/>
+            <fileset dir="cmake/binary" />
         </delete>
     </target>
 
@@ -65,13 +66,16 @@
             description="Runs unit tests and creates a report"
     />
 
-
-
     <target name="test.basic" description="Test the task" depends="jar">
+        <delete dir="cmake/binary" />
         <taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${cmakeant.jar}"/>
         <cmake sourceDir="cmake/src" binaryDir="cmake/binary">
-			<generator name="KDevelop3" />
+			<!--generator name="Visual Studio 6" platform="win" /-->
+			<generator name="Visual Studio 8 2005" platform="win" />
 			<generator name="Unix Makefiles" platform="linux" />
+        	
+        	<cmakevar name="CMAKE_RC_COMPILER" property="cmake.rc.compiler" />
 		</cmake>
+    	<echo>${cmake.rc.compiler}</echo>
     </target>
 </project>

@@ -1,3 +1,3 @@
-PROJECT( Test )
+PROJECT( TestProjectName )
 
-ADD_EXECUTABLE( Test test.cpp )
+ADD_EXECUTABLE( TestProjectName test.cpp )
