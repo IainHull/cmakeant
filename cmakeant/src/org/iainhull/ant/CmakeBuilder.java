@@ -26,7 +26,7 @@ public class CmakeBuilder extends Task {
 	private File binaryDir = CURRENT_DIR;
 
 	private List<GeneratorRule> rules = new ArrayList<GeneratorRule>();
-	private List<CmakeProperty> props = new ArrayList<CmakeProperty>();
+	private List<ReadVariable> props = new ArrayList<ReadVariable>();
 
 	/**
 	 * Set the cmake source directory, where CMakeLists.txt lives.
@@ -63,8 +63,8 @@ public class CmakeBuilder extends Task {
 	 * Create and add a new CmakeProperty, these enable CmakeBuilder to
 	 * set the ant variables based on CMakeCache.txt entries.
 	 */
-	public CmakeProperty createCmakevar() {
-		CmakeProperty p = new CmakeProperty();
+	public ReadVariable createCmakevar() {
+		ReadVariable p = new ReadVariable();
 		props.add(p);
 		return p;
 	}	
@@ -161,7 +161,7 @@ public class CmakeBuilder extends Task {
 	}
 
 	private void executeCmakeVars(CacheVariables vars) {
-		for (CmakeProperty prop : props) {
+		for (ReadVariable prop : props) {
 			Variable v = vars.getVariable(prop.getName());
 			if (v != null) {
 				log("Setting property: " + prop.getProperty() + " to " + v.getValue(), Project.MSG_VERBOSE);
