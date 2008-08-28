@@ -74,7 +74,7 @@
 			<generator name="Visual Studio 8 2005" platform="win" />
 			<generator name="Unix Makefiles" platform="linux" />
         	
-        	<cmakevar name="CMAKE_RC_COMPILER" property="cmake.rc.compiler" />
+        	<readvar name="CMAKE_RC_COMPILER" property="cmake.rc.compiler" />
 		</cmake>
     	<echo>${cmake.rc.compiler}</echo>
     </target>

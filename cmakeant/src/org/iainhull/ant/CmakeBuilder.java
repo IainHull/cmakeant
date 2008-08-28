@@ -26,7 +26,8 @@ public class CmakeBuilder extends Task {
 	private File binaryDir = CURRENT_DIR;
 
 	private List<GeneratorRule> rules = new ArrayList<GeneratorRule>();
-	private List<ReadVariable> props = new ArrayList<ReadVariable>();
+	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
+	private List<Variable> variables = new ArrayList<Variable>();
 
 	/**
 	 * Set the cmake source directory, where CMakeLists.txt lives.
@@ -60,13 +61,23 @@ public class CmakeBuilder extends Task {
 	}
 	
 	/** 
-	 * Create and add a new CmakeProperty, these enable CmakeBuilder to
+	 * Create and add a new ReadVariable, these enable CmakeBuilder to
 	 * set the ant variables based on CMakeCache.txt entries.
 	 */
-	public ReadVariable createCmakevar() {
-		ReadVariable p = new ReadVariable();
-		props.add(p);
-		return p;
+	public ReadVariable createReadvar() {
+		ReadVariable v = new ReadVariable();
+		readVars.add(v);
+		return v;
+	}
+	
+	/** 
+	 * Create and add a new Variable, these enable CmakeBuilder to
+	 * set the ant variables based on CMakeCache.txt entries.
+	 */
+	public Variable createVariable() {
+		Variable v = new Variable();
+		variables.add(v);
+		return v;
 	}	
 	
 	/**
@@ -113,13 +124,19 @@ public class CmakeBuilder extends Task {
 	private void executeCmake() {
 		List<String> commandLine = new ArrayList<String>();
 		commandLine.add(CMAKE_COMMAND);
-		commandLine.add(sourceDir.toString());
 		GeneratorRule rule = getBestGenerator();
 		if (rule != null) {
 			commandLine.add("-G");
 			commandLine.add(rule.getName());
 		}
-	
+		
+		for(Variable v : variables) {
+			commandLine.add("-D");
+			commandLine.add(v.toString());
+		}
+
+		commandLine.add(sourceDir.toString());
+		
 		try {
 			log("Calling CMake");
 			log("Source Directory: " + sourceDir);
@@ -161,7 +178,7 @@ public class CmakeBuilder extends Task {
 	}
 
 	private void executeCmakeVars(CacheVariables vars) {
-		for (ReadVariable prop : props) {
+		for (ReadVariable prop : readVars) {
 			Variable v = vars.getVariable(prop.getName());
 			if (v != null) {
 				log("Setting property: " + prop.getProperty() + " to " + v.getValue(), Project.MSG_VERBOSE);

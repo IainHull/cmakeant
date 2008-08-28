@@ -13,35 +13,19 @@ import org.apache.tools.ant.taskdefs.Execute;
 
 import junit.framework.Assert;
 
-public class MockCmakeBuilder extends CmakeBuilder {
-	
-	public static interface AssertExecute {
-		int assertCommand(String [] commandLine, File workingDirectory);
-	}
-	
-	public static class AssertExecuteCommand implements AssertExecute {
-		private String[] commandLine;
-		private File workingDirectory;
-
-		AssertExecuteCommand(String [] commandLine, File workingDirectory) {
-			this.commandLine = commandLine;
-			this.workingDirectory = workingDirectory;
-		}
-		
-		public int assertCommand(String [] commandLine, File workingDirectory) {
-			System.out.println(Arrays.toString(commandLine));
-			System.out.println(workingDirectory);
-			
-			Assert.assertTrue(Arrays.equals(this.commandLine, commandLine));
-			Assert.assertEquals(this.workingDirectory, workingDirectory);
-			
-			return 0;
-		}
-	}
+public class MockCmakeBuilder extends CmakeBuilder {	
+	public static final String GENERATOR = "generator";
+	public static final String BUILD_TOOL = "buildtool";
 	
 	private AssertExecute[] asserts = {};
 	private int index = 0;
 	private CacheVariables cacheVariables = new CacheVariables();
+	
+	public MockCmakeBuilder() {
+		addCacheVariables(
+			new Variable("CMAKE_BUILD_TOOL", Variable.STRING_TYPE, BUILD_TOOL),
+			new Variable("CMAKE_GENERATOR", Variable.STRING_TYPE, GENERATOR) );
+	}
 	
 	public void setAsserts(AssertExecute ... asserts) {
 		this.asserts = asserts;
@@ -50,7 +34,9 @@ public class MockCmakeBuilder extends CmakeBuilder {
 
 	int doExecute(String [] commandLine, File workingDirectory) throws IOException {
 		Assert.assertTrue(index < asserts.length);
-		return asserts[index].assertCommand(commandLine, workingDirectory);
+		int ret = asserts[index].assertCommand(commandLine, workingDirectory);
+		index++;
+		return ret;
 	}
 
 	void testPaths() {

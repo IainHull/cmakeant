@@ -17,8 +17,10 @@ public class FuncTestCmakeBuilder extends BuildFileTest {
 	public void testBasic() {
 		executeTarget("test.basic");
 		System.out.println(getLog());
-		assertEquals("Message was logged but should not.", getLog(), "");
-		expectLog("use.nestedText", "nested-text");
-		assertLogContaining("Nested Element 1");
+		assertLogContaining("Calling CMake");
+		assertLogContaining("Source Directory:");
+		assertLogContaining("Binary Directory:");
+		assertLogContaining("Generator:");
+		assertLogContaining("Building");
 	}
 }

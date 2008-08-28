@@ -21,23 +21,37 @@ public class CmakeBuilderTest extends TestCase {
 		File binary = new File("binary");
 		
 		builder.setAsserts(
-			new MockCmakeBuilder.AssertExecuteCommand(
-					new String [] { "cmake", source.toString() },
-					binary ),
-			new MockCmakeBuilder.AssertExecuteCommand(
-					new String [] { "cmake" },
-					binary ),
-			new MockCmakeBuilder.AssertExecuteCommand(
-					new String [] { "cmake" },
-					binary ));
+			new AssertExecute.Command(
+					binary, "cmake", source.toString()),
+			new AssertExecute.Command(
+					binary, MockCmakeBuilder.BUILD_TOOL));
 		
-		builder.addCacheVariables(
-				new Variable("CMAKE_BUILD_TOOL", Variable.STRING_TYPE, "buildtool"),
-				new Variable("CMAKE_GENERATOR", Variable.STRING_TYPE, "generator") );
-
 		builder.setSourceDir(source);
 		builder.setBinaryDir(binary);
 		builder.execute();
 	}
-	
+
+	public void testVariables() {
+		File source = new File("source");
+		File binary = new File("binary");
+		
+		Variable v1 = builder.createVariable();
+		Variable v2 = builder.createVariable();
+		
+		v1.setName("One");
+		v1.setValue("TheOne");
+		
+		v2.setName("One");
+		v2.setType(Variable.BOOL_TYPE);
+		v2.setValue("ON");		
+		
+		builder.setAsserts(
+				new AssertExecute.Command(
+						binary, "cmake", "-D", v1.toString(), "-D", v2.toString(), source.toString()),
+			new AssertExecute.Null() );
+		
+		builder.setSourceDir(source);
+		builder.setBinaryDir(binary);
+		builder.execute();
+	}
 }
