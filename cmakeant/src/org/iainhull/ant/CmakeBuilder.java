@@ -3,7 +3,10 @@ package org.iainhull.ant;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -17,36 +20,45 @@ import org.apache.tools.ant.types.LogLevel;
  * 
  * @author iain.hull
  */
-public class CmakeBuilder extends Task {
+public class CmakeBuilder extends Task implements CmakeRule {
 	private static String CMAKE_COMMAND = "cmake";
 	private static String CMAKE_CACHE = "CMakeCache.txt";
 	private static File CURRENT_DIR = new File(".");
 
 	private File sourceDir = CURRENT_DIR;
 	private File binaryDir = CURRENT_DIR;
+	private BuildType buildType = null;
 
 	private List<GeneratorRule> rules = new ArrayList<GeneratorRule>();
 	private List<CmakeProperty> props = new ArrayList<CmakeProperty>();
 
-	/**
-	 * Set the cmake source directory, where CMakeLists.txt lives.
-	 *  
-	 * @param sourceDir the source directory
-	 */
 	public void setSourceDir(File sourceDir) {
 		this.sourceDir = sourceDir;
 	}
 
-	/**
-	 * Set the cmake binary directory, where the cmake generated makefiles/
-	 * projects are written.
-	 * 
-	 * @param binaryDir the binary directory
-	 */
 	public void setBinaryDir(File binaryDir) {
 		this.binaryDir = binaryDir;
 	}
 
+
+	public File getBinaryDir() {
+		return this.binaryDir;
+	}
+
+	public BuildType getBuildType() {
+		return this.buildType;
+	}
+
+	public File getSourceDir() {
+		return this.sourceDir;
+	}
+
+	public void setBuildType(BuildType buildType) {
+		this.buildType = buildType;
+	}	
+	
+	
+	
 	/**
 	 * Create and add a new GeneratorRule, these are used to decide which
 	 * generator cmake uses based on the host operating system.
@@ -69,6 +81,15 @@ public class CmakeBuilder extends Task {
 		return p;
 	}	
 	
+	public Map<String, CmakeProperty> getCmakevars() {
+		Map<String, CmakeProperty> ret = new HashMap<String, CmakeProperty>();
+		for(CmakeProperty p : props) {
+			ret.put(p.getName(), p);
+		}
+		
+		return ret;
+	}
+
 	/**
 	 * Call cmake as instructed, then build the makefiles/projects.
 	 */
