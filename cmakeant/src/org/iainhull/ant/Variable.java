@@ -8,6 +8,7 @@ package org.iainhull.ant;
  * @author iain.hull
  */
 public class Variable {
+	
 	public static final String STRING_TYPE = "STRING";
 	public static final String FILEPATH_TYPE = "FILEPATH";
 	public static final String PATH_TYPE = "PATH";
@@ -44,8 +45,16 @@ public class Variable {
 		this.name = name;
 	}
 
+	public String getType() {
+		return type;
+	}
+
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getValue() {
+		return value;
 	}
 
 	public void setValue(String value) {
@@ -57,4 +66,24 @@ public class Variable {
 		return name + ":" + type + "=" + value;
 	}
 
+	@Override
+	public boolean equals(Object rhs) {
+		if (rhs instanceof Variable) {
+			return equals((Variable) rhs);
+		}
+		return false;
+	}
+	
+	public boolean equals(Variable rhs) {
+		return equals(name, rhs.name) 
+			&& equals(type, rhs.type) 
+			&& equals(value, rhs.value);
+	}
+	
+	private boolean equals(String lhs, String rhs) {
+		if (lhs == null) {
+			return rhs == null;
+		}
+		return lhs.equals(rhs);
+	}
 }
