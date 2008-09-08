@@ -3,7 +3,6 @@ package org.iainhull.ant;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,10 +91,10 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		return v;
 	}	
 	
-	public Map<String, CmakeProperty> getCmakevars() {
-		Map<String, CmakeProperty> ret = new HashMap<String, CmakeProperty>();
-		for(CmakeProperty p : props) {
-			ret.put(p.getName(), p);
+	public Map<String, Variable> getVariables() {
+		Map<String, Variable> ret = new HashMap<String, Variable>();
+		for(Variable v : variables) {
+			ret.put(v.getName(), v);
 		}
 		
 		return ret;

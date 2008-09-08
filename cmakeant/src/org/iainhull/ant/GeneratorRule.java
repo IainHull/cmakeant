@@ -4,6 +4,10 @@
 package org.iainhull.ant;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GeneratorRule implements CmakeRule {
 	private String name;
@@ -15,6 +19,8 @@ public class GeneratorRule implements CmakeRule {
 	private File sourceDir;
 
 	private BuildType buildType;
+	
+	private List<Variable> variables = new ArrayList<Variable>();
 	
 	public String getName() {
 		return name;
@@ -72,5 +78,20 @@ public class GeneratorRule implements CmakeRule {
 
 	public void setSourceDir(File sourceDir) {
 		this.sourceDir = sourceDir;
+	}
+	
+	public Variable createVariable() {
+		Variable v = new Variable();
+		variables.add(v);
+		return v;
+	}	
+	
+	public Map<String, Variable> getVariables() {
+		Map<String, Variable> ret = new HashMap<String, Variable>();
+		for(Variable v : variables) {
+			ret.put(v.getName(), v);
+		}
+		
+		return ret;
 	}
 }

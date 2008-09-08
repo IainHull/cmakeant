@@ -68,11 +68,11 @@ public class CmakeRuleTest extends TestCase {
 		addVar(second, v3);
 		addVar(second, v4);
 
-		assertEquals(expected, composite.getCmakevars());
+		assertEquals(expected, composite.getVariables());
 	}
 	
 	private void addVar(CmakeRule rule, Variable v) {
-		Variable u = rule.createCmakevar();
+		Variable u = rule.createVariable();
 		u.setName(v.getName());
 		u.setType(v.getType());
 		u.setValue(v.getValue());
@@ -109,13 +109,13 @@ public class CmakeRuleTest extends TestCase {
 			this.sourceDir = sourceDir;
 		}
 		
-		public Variable createCmakevar() {
+		public Variable createVariable() {
 			Variable v = new Variable();
 			vars.add(v);
 			return v;
 		}	
 		
-		public Map<String, Variable> getCmakevars() {
+		public Map<String, Variable> getVariables() {
 			Map<String, Variable> ret = new HashMap<String, Variable>();
 			for(Variable v : vars) {
 				ret.put(v.getName(), v);

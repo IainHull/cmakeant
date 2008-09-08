@@ -33,14 +33,6 @@ public class Variable {
 		return name;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}

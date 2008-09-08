@@ -46,8 +46,8 @@ public interface CmakeRule {
 	public void setBuildType(BuildType buildType);
 	
 	
-	public Variable createCmakevar();
-	public Map<String, Variable> getCmakevars();
+	public Variable createVariable();
+	public Map<String, Variable> getVariables();
 	
 	/**
 	 * Utility class to implement CmakeRule inheritence, this only supports 
@@ -95,13 +95,13 @@ public interface CmakeRule {
 		public void setSourceDir(File sourceDir) {
 		}
 
-		public Variable createCmakevar() {
+		public Variable createVariable() {
 			return null;
 		}
 
-		public Map<String, Variable> getCmakevars() {
-			Map<String, Variable> ret = new HashMap<String, Variable>(first.getCmakevars());
-			ret.putAll(second.getCmakevars());
+		public Map<String, Variable> getVariables() {
+			Map<String, Variable> ret = new HashMap<String, Variable>(first.getVariables());
+			ret.putAll(second.getVariables());
 			return ret;
 		}
 	}
