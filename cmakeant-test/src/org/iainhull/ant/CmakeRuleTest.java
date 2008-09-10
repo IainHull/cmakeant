@@ -1,12 +1,9 @@
 package org.iainhull.ant;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.iainhull.ant.CmakeRule.Composite;
 
 import junit.framework.TestCase;
 
@@ -14,7 +11,7 @@ public class CmakeRuleTest extends TestCase {
 
 	private SimpleCmakeRule first;
 	private SimpleCmakeRule second;
-	private Composite composite;
+	private CompositeCmakeRule composite;
 
 	public CmakeRuleTest(String arg0) {
 		super(arg0);
@@ -25,7 +22,7 @@ public class CmakeRuleTest extends TestCase {
 		
 		this.first = new SimpleCmakeRule();
 		this.second = new SimpleCmakeRule();
-		this.composite = new CmakeRule.Composite(first, second);
+		this.composite = new CompositeCmakeRule(first, second);
 	}
 	
 	public void testComposite() {
@@ -37,12 +34,6 @@ public class CmakeRuleTest extends TestCase {
 		assertEquals(one, composite.getBinaryDir());
 		second.setBinaryDir(two);
 		assertEquals(two, composite.getBinaryDir());
-		
-		assertNull(composite.getSourceDir());
-		first.setSourceDir(one);
-		assertEquals(one, composite.getSourceDir());
-		second.setSourceDir(two);
-		assertEquals(two, composite.getSourceDir());
 		
 		assertNull(composite.getBuildType());
 		first.setBuildType(BuildType.Debug);
@@ -76,51 +67,5 @@ public class CmakeRuleTest extends TestCase {
 		u.setName(v.getName());
 		u.setType(v.getType());
 		u.setValue(v.getValue());
-	}
-
-	private static class SimpleCmakeRule implements CmakeRule {
-		private File binaryDir;
-		private File sourceDir;
-		private BuildType buildType;
-		private List<Variable> vars = new ArrayList<Variable>();
-		
-		
-		public File getBinaryDir() {
-			return binaryDir;
-		}
-
-		public BuildType getBuildType() {
-			return buildType;
-		}
-
-		public File getSourceDir() {
-			return sourceDir;
-		}
-
-		public void setBinaryDir(File binaryDir) {
-			this.binaryDir = binaryDir;
-		}
-
-		public void setBuildType(BuildType buildType) {
-			this.buildType = buildType;
-		}
-
-		public void setSourceDir(File sourceDir) {
-			this.sourceDir = sourceDir;
-		}
-		
-		public Variable createVariable() {
-			Variable v = new Variable();
-			vars.add(v);
-			return v;
-		}	
-		
-		public Map<String, Variable> getVariables() {
-			Map<String, Variable> ret = new HashMap<String, Variable>();
-			for(Variable v : vars) {
-				ret.put(v.getName(), v);
-			}
-			return ret;
-		}
 	}
 }

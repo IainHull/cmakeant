@@ -12,7 +12,7 @@ public class GeneratorRuleTest extends TestCase {
 	}
 	
 	public void testDefault() {
-		GeneratorRule rule = new GeneratorRule();
+		GeneratorRule rule = new GeneratorRule(new CmakeBuilder());
 		assertTrue(rule.isDefault());
 		
 		rule.setPlatform("Some platform");
@@ -33,7 +33,7 @@ public class GeneratorRuleTest extends TestCase {
 	}
 
 	private void assertMatch(String rulePlatform, String sysPlatform, boolean match) {
-		GeneratorRule rule = new GeneratorRule();
+		GeneratorRule rule = new GeneratorRule(new CmakeBuilder());
 		rule.setName("Test rule " + rulePlatform);
 		rule.setPlatform(rulePlatform);
 		assertTrue(rule.matches(sysPlatform) == match);

@@ -3,7 +3,6 @@ package org.iainhull.ant;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,37 +23,43 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	private static String CMAKE_CACHE = "CMakeCache.txt";
 	private static File CURRENT_DIR = new File(".");
 
+	private CmakeRule cmakeRule = new SimpleCmakeRule();
 	private File sourceDir = CURRENT_DIR;
-	private File binaryDir = CURRENT_DIR;
-	private BuildType buildType = null;
-
 	private List<GeneratorRule> rules = new ArrayList<GeneratorRule>();
 	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
-	private List<Variable> variables = new ArrayList<Variable>();
 
-	public void setSourceDir(File sourceDir) {
-		this.sourceDir = sourceDir;
-	}
-
-	public void setBinaryDir(File binaryDir) {
-		this.binaryDir = binaryDir;
-	}
-
-
-	public File getBinaryDir() {
-		return this.binaryDir;
-	}
-
-	public BuildType getBuildType() {
-		return this.buildType;
-	}
-
+	/**
+	 * Get the cmake source directory, where CMakeLists.txt lives.
+	 *  
+	 * @return the source directory
+	 */
 	public File getSourceDir() {
 		return this.sourceDir;
 	}
 
+	/**
+	 * Set the cmake source directory, where CMakeLists.txt lives.
+	 *  
+	 * @param sourceDir the source directory
+	 */
+	public void setSourceDir(File sourceDir) {
+		this.sourceDir = sourceDir;
+	}
+
+	public File getBinaryDir() {
+		return this.cmakeRule.getBinaryDir();
+	}
+
+	public void setBinaryDir(File binaryDir) {
+		this.cmakeRule.setBinaryDir(binaryDir);
+	}
+
+	public BuildType getBuildType() {
+		return this.cmakeRule.getBuildType();
+	}
+
 	public void setBuildType(BuildType buildType) {
-		this.buildType = buildType;
+		this.cmakeRule.setBuildType(buildType);
 	}	
 	
 	
@@ -66,7 +71,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	 * @return the new GeneratorRule
 	 */
 	public GeneratorRule createGenerator() {
-		GeneratorRule g = new GeneratorRule();
+		GeneratorRule g = new GeneratorRule(this);
 		rules.add(g);
 		return g;
 	}
@@ -86,25 +91,17 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	 * set the ant variables based on CMakeCache.txt entries.
 	 */
 	public Variable createVariable() {
-		Variable v = new Variable();
-		variables.add(v);
-		return v;
+		return cmakeRule.createVariable();
 	}	
 	
 	public Map<String, Variable> getVariables() {
-		Map<String, Variable> ret = new HashMap<String, Variable>();
-		for(Variable v : variables) {
-			ret.put(v.getName(), v);
-		}
-		
-		return ret;
+		return cmakeRule.getVariables();
 	}
 
 	/**
 	 * Call cmake as instructed, then build the makefiles/projects.
 	 */
 	public void execute() {
-
 		String osName = getOperatingSystem();
 		String osArch = System.getProperty("os.arch");
 		String osVer = System.getProperty("os.version");
@@ -117,19 +114,16 @@ public class CmakeBuilder extends Task implements CmakeRule {
 			log("Generator: " + g + (g.matches(osName) ? " (match)" : ""),
 					Project.MSG_VERBOSE);
 		}
-
-		testPaths();
-
-		executeCmake();
-
-		CacheVariables vars = readCacheVariables();
 		
-		executeBuild(vars);
-		
+		GeneratorRule rule = getBestGenerator();
+		testPaths(rule);
+		executeCmake(rule);
+		CacheVariables vars = readCacheVariables(rule.getBinaryDir());
+		executeBuild(rule, vars);
 		executeCmakeVars(vars);
 	}
 
-	CacheVariables readCacheVariables() {
+	CacheVariables readCacheVariables(File binaryDir) {
 		File cache = new File(binaryDir, CMAKE_CACHE);
 		CacheVariables vars;
 		try {
@@ -141,16 +135,15 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		return vars;
 	}
 
-	private void executeCmake() {
+	private void executeCmake(GeneratorRule rule) {
 		List<String> commandLine = new ArrayList<String>();
 		commandLine.add(CMAKE_COMMAND);
-		GeneratorRule rule = getBestGenerator();
 		if (rule != null) {
 			commandLine.add("-G");
 			commandLine.add(rule.getName());
 		}
 		
-		for(Variable v : variables) {
+		for(Variable v : rule.getVariables().values()) {
 			commandLine.add("-D");
 			commandLine.add(v.toString());
 		}
@@ -160,12 +153,12 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		try {
 			log("Calling CMake");
 			log("Source Directory: " + sourceDir);
-			log("Binary Directory: " + binaryDir);
+			log("Binary Directory: " + rule.getBinaryDir());
 			if (rule != null) {
 				log("Generator: " + rule);
 			}
 	
-			int ret = doExecute(commandLine.toArray(new String[0]), binaryDir);
+			int ret = doExecute(commandLine.toArray(new String[0]), rule.getBinaryDir());
 			if (ret != 0) {
 				throw new BuildException(CMAKE_COMMAND
 						+ " returned error code " + ret);
@@ -176,15 +169,15 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		}
 	}
 
-	private void executeBuild(CacheVariables vars) {
+	private void executeBuild(GeneratorRule rule, CacheVariables vars) {
 		try {
 			String makeCommand = vars.getVariable("CMAKE_BUILD_TOOL").getValue();
 			String cmakeGenerator = vars.getVariable("CMAKE_GENERATOR").getValue();
 	
 			log("Building cmake output");
 			int ret = doExecute(
-					BuildCommand.inferCommand(binaryDir, makeCommand, cmakeGenerator), 
-					binaryDir);
+					BuildCommand.inferCommand(rule.getBinaryDir(), makeCommand, cmakeGenerator), 
+					rule.getBinaryDir());
 			
 			if (ret != 0) {
 				throw new BuildException(makeCommand + " returned error code "
@@ -237,8 +230,13 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		return exec.execute();
 	}
 	
-	
-	void testPaths() {
+	/**
+	 * Test that the source directory is valid.
+	 * This is protected to aid testing.
+	 * 
+	 * @param sourceDir the directory to test
+	 */
+	protected void testSourceDir(File sourceDir) {
 		if (sourceDir == null) {
 			throw new BuildException("Source directory not set");
 		}
@@ -251,8 +249,16 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		if (!sourceDir.isDirectory()) {
 			throw new BuildException("Source directory is not a directory: "
 					+ sourceDir);
-		}
-
+		}		
+	}
+	
+	/**
+	 * Test that the binary directory is valid.
+	 * This is protected to aid testing.
+	 * 
+	 * @param binaryDir the directory to test
+	 */
+	protected void testBinaryDir(File binaryDir) {
 		if (binaryDir == null) {
 			throw new BuildException("Binary directory not set");
 		}
@@ -266,13 +272,24 @@ public class CmakeBuilder extends Task implements CmakeRule {
 			}
 		}
 		
-		if (!sourceDir.isDirectory()) {
+		if (!binaryDir.isDirectory()) {
 			throw new BuildException("Binary directory is not a directory: "
-					+ sourceDir);
+					+ binaryDir);
 		}
 	}
+	
+	private void testPaths(GeneratorRule rule) {
+		testSourceDir(sourceDir);
+		testBinaryDir(rule.getBinaryDir());
+	}
 
-	private static String getOperatingSystem() {
+	/**
+	 * Return the host operating system name.
+	 * This is protected to aid testing.
+	 * 
+	 * @return the host operating system name.
+	 */
+	protected String getOperatingSystem() {
 		return System.getProperty("os.name");
 	}
 
