@@ -26,8 +26,12 @@ public class CmakeBuilderTest extends TestCase {
 			new AssertExecute.Command(
 					binary, MockCmakeBuilder.BUILD_TOOL));
 		
+		builder.setExpectedSourceDir(source);
+		builder.setExpectedBinaryDir(binary);
+
 		builder.setSourceDir(source);
 		builder.setBinaryDir(binary);
+		
 		builder.execute();
 	}
 
@@ -41,7 +45,7 @@ public class CmakeBuilderTest extends TestCase {
 		v1.setName("One");
 		v1.setValue("TheOne");
 		
-		v2.setName("One");
+		v2.setName("Two");
 		v2.setType(Variable.BOOL_TYPE);
 		v2.setValue("ON");		
 		
@@ -50,8 +54,16 @@ public class CmakeBuilderTest extends TestCase {
 						binary, "cmake", "-D", v1.toString(), "-D", v2.toString(), source.toString()),
 			new AssertExecute.Null() );
 		
+		builder.setExpectedSourceDir(source);
+		builder.setExpectedBinaryDir(binary);
+
 		builder.setSourceDir(source);
 		builder.setBinaryDir(binary);
+
 		builder.execute();
+	}
+	
+	public void testGeneratorVariables() {
+		fail();
 	}
 }

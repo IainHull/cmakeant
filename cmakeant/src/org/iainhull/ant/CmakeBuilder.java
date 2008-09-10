@@ -28,6 +28,11 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	private List<GeneratorRule> rules = new ArrayList<GeneratorRule>();
 	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
 
+	public CmakeBuilder() {
+		cmakeRule.setBinaryDir(CURRENT_DIR);
+	}
+	
+	
 	/**
 	 * Get the cmake source directory, where CMakeLists.txt lives.
 	 *  
@@ -138,7 +143,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	private void executeCmake(GeneratorRule rule) {
 		List<String> commandLine = new ArrayList<String>();
 		commandLine.add(CMAKE_COMMAND);
-		if (rule != null) {
+		if (rule.getName() != null) {
 			commandLine.add("-G");
 			commandLine.add(rule.getName());
 		}
@@ -299,6 +304,6 @@ public class CmakeBuilder extends Task implements CmakeRule {
 				return g;
 			}
 		}
-		return null;
+		return createGenerator();
 	}
 }

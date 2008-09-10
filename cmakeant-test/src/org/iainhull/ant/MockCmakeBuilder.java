@@ -12,6 +12,8 @@ public class MockCmakeBuilder extends CmakeBuilder {
 	private AssertExecute[] asserts = {};
 	private int index = 0;
 	private CacheVariables cacheVariables = new CacheVariables();
+	private File expectedSourceDir;
+	private File expectedBinaryDir;
 	
 	public MockCmakeBuilder() {
 		addCacheVariables(
@@ -34,14 +36,43 @@ public class MockCmakeBuilder extends CmakeBuilder {
 	void testPaths() {
 	}
 	
-	CacheVariables readCacheVariables() {
-		return cacheVariables;
-	}
-
 	public void addCacheVariables(Variable ... variables) {
 		for(Variable v : variables) {
 			cacheVariables.addVariable(v);
 		}		
 	}
+	
+	public void setExpectedSourceDir(File sourceDir) {
+		expectedSourceDir = sourceDir;
+	}
 
+	public void setExpectedBinaryDir(File binaryDir) {
+		expectedBinaryDir = binaryDir;
+	}
+
+	@Override
+	protected void testSourceDir(File sourceDir) {
+		if (expectedSourceDir != null) {
+			Assert.assertEquals(expectedSourceDir, sourceDir);
+		}
+		else {
+			super.testSourceDir(sourceDir);
+		}
+	}
+	
+	@Override
+	protected void testBinaryDir(File binaryDir) {
+		if (expectedSourceDir != null) {
+			Assert.assertEquals(expectedBinaryDir, binaryDir);
+		}
+		else {
+			super.testSourceDir(binaryDir);
+		}
+	}
+
+	
+	@Override
+	CacheVariables readCacheVariables(File binaryDir) {
+		return cacheVariables;
+	}
 }
