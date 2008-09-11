@@ -9,9 +9,9 @@ import junit.framework.TestCase;
 
 public class CmakeRuleTest extends TestCase {
 
-	private SimpleCmakeRule first;
-	private SimpleCmakeRule second;
-	private CompositeCmakeRule composite;
+	private SimpleParams first;
+	private SimpleParams second;
+	private CompositeParams composite;
 
 	public CmakeRuleTest(String arg0) {
 		super(arg0);
@@ -20,9 +20,9 @@ public class CmakeRuleTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		this.first = new SimpleCmakeRule();
-		this.second = new SimpleCmakeRule();
-		this.composite = new CompositeCmakeRule(first, second);
+		this.first = new SimpleParams();
+		this.second = new SimpleParams();
+		this.composite = new CompositeParams(first, second);
 	}
 	
 	public void testComposite() {
@@ -62,7 +62,7 @@ public class CmakeRuleTest extends TestCase {
 		assertEquals(expected, composite.getVariables());
 	}
 	
-	private void addVar(CmakeRule rule, Variable v) {
+	private void addVar(Params rule, Variable v) {
 		Variable u = rule.createVariable();
 		u.setName(v.getName());
 		u.setType(v.getType());

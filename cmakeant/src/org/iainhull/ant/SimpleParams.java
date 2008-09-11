@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleCmakeRule implements CmakeRule {
+public class SimpleParams implements Params {
 	private File binaryDir;
 	private BuildType buildType;
 	private List<Variable> vars = new ArrayList<Variable>();

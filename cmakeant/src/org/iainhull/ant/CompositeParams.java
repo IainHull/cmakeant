@@ -8,11 +8,11 @@ import java.util.Map;
  * Utility class to implement CmakeRule inheritence, this only supports 
  * the getters.
  */
-public class CompositeCmakeRule implements CmakeRule {
-	private CmakeRule first;
-	private CmakeRule second;
+public class CompositeParams implements Params {
+	private Params first;
+	private Params second;
 	
-	public CompositeCmakeRule(CmakeRule first, CmakeRule second) {
+	public CompositeParams(Params first, Params second) {
 		this.first = first;
 		this.second = second;
 	}
