@@ -15,19 +15,19 @@ public class SimpleCmakeRule implements CmakeRule {
 	private List<Variable> vars = new ArrayList<Variable>();
 	
 	
-	public File getBinaryDir() {
+	public File getBindir() {
 		return binaryDir;
 	}
 
-	public BuildType getBuildType() {
+	public BuildType getBuildtype() {
 		return buildType;
 	}
 
-	public void setBinaryDir(File binaryDir) {
+	public void setBindir(File binaryDir) {
 		this.binaryDir = binaryDir;
 	}
 
-	public void setBuildType(BuildType buildType) {
+	public void setBuildtype(BuildType buildType) {
 		this.buildType = buildType;
 	}
 

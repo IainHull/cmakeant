@@ -1,11 +1,10 @@
 package org.iainhull.ant;
 
-import java.io.File;
 
 public class MakeBuildCommand extends BuildCommand {
 
-	public MakeBuildCommand(File binaryDir, String makeCommand, String cmakeGenerator) {
-		super(binaryDir, makeCommand, cmakeGenerator);
+	public MakeBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+		super(generator, makeCommand, cmakeGenerator);
 	}
 
 	@Override

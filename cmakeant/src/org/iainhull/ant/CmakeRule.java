@@ -17,7 +17,7 @@ public interface CmakeRule {
 	 * 
 	 * @return the binary directory
 	 */
-	public File getBinaryDir();
+	public File getBindir();
 
 	/**
 	 * Set the cmake binary directory, where the cmake generated makefiles/
@@ -25,10 +25,10 @@ public interface CmakeRule {
 	 * 
 	 * @param binaryDir the binary directory
 	 */
-	public void setBinaryDir(File binaryDir);
+	public void setBindir(File binaryDir);
 	
-	public BuildType getBuildType();
-	public void setBuildType(BuildType buildType);
+	public BuildType getBuildtype();
+	public void setBuildtype(BuildType buildType);
 	
 	
 	public Variable createVariable();

@@ -1,15 +1,13 @@
 package org.iainhull.ant;
 
-import java.io.File;
-
 import org.apache.tools.ant.BuildException;
 
 public abstract class BuildCommand {
-	public static String[] inferCommand(File binaryDir, String makeCommand, String cmakeGenerator) {
+	public static String[] inferCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
 		BuildCommand [] commands = {
-				new VisualStudioBuildCommand(binaryDir, makeCommand, cmakeGenerator),
-				new Vs6BuildCommand(binaryDir, makeCommand, cmakeGenerator),
-				new MakeBuildCommand(binaryDir, makeCommand, cmakeGenerator)
+				new VisualStudioBuildCommand(generator, makeCommand, cmakeGenerator),
+				new Vs6BuildCommand(generator, makeCommand, cmakeGenerator),
+				new MakeBuildCommand(generator, makeCommand, cmakeGenerator)
 		};
 		
 		for (BuildCommand command : commands) {
@@ -18,15 +16,15 @@ public abstract class BuildCommand {
 			}
 		}
 		
-		throw new BuildException("Cannot construct build command for: " + cmakeGenerator);
+		throw new BuildException("Cannot construct build command for: " + generator.getName());
 	}
 
-	protected final File binaryDir;
+	protected final GeneratorRule generator;
 	protected final String makeCommand;
 	protected final String cmakeGenerator;
 
-	protected BuildCommand(File binaryDir, String makeCommand, String cmakeGenerator) {
-		this.binaryDir = binaryDir;
+	protected BuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+		this.generator = generator;
 		this.makeCommand = makeCommand;
 		this.cmakeGenerator = cmakeGenerator;
 	}

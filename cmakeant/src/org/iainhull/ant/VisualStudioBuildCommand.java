@@ -10,18 +10,26 @@ import org.apache.tools.ant.BuildException;
 
 public class VisualStudioBuildCommand extends BuildCommand {
 	private final static Map<String, String> workspaceExtentions = createWorkspaceExtentions();
+	private final WorkSpaceLocator locator;
 	
-	public VisualStudioBuildCommand(File binaryDir, String makeCommand, String cmakeGenerator) {
-		super(binaryDir, makeCommand, cmakeGenerator);
+	public VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+		super(generator, makeCommand, cmakeGenerator);
+		this.locator = new WorkSpaceLocator();
+	}
+
+	VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator, WorkSpaceLocator locator) {
+		super(generator, makeCommand, cmakeGenerator);
+		this.locator = locator;
 	}
 	
 	@Override
 	protected String[] buildCommand() {
+		String buildType = generator.getBuildtype() == null ? "Release" : generator.getBuildtype().toString(); 
 		return new String[] { 
 				makeCommand, 
-				workspace(cmakeGenerator), 
+				workspace(workspaceExtentions.get(cmakeGenerator)), 
 				"/Build", 
-				"Release"};
+				buildType};
 	}
 
 	@Override
@@ -39,17 +47,8 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		return Collections.unmodifiableMap(map);
 	}
 	
-	private String workspace(final String cmakeGenerator) {
-		String [] workspaces = binaryDir.list(new FilenameFilter() {
-			 public boolean accept(File dir, String name) {
-				 return name.endsWith(workspaceExtentions.get(cmakeGenerator));
-			 }
-		});
-		
-		if (workspaces.length == 0) {
-			throw new BuildException("Cannot find visual studio workspace in " + binaryDir);
-		}
-		
-		return workspaces[0];
+	private String workspace(final String extension) {
+		File binaryDir = generator.getBindir();
+		return locator.findByExtension(binaryDir, extension);
 	}
 }

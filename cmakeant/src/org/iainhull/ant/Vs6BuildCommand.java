@@ -11,8 +11,8 @@ import org.apache.tools.ant.BuildException;
 public class Vs6BuildCommand extends BuildCommand {
 	private final static Map<String, String> workspaceExtentions = createWorkspaceExtentions();
 	
-	public Vs6BuildCommand(File binaryDir, String makeCommand, String cmakeGenerator) {
-		super(binaryDir, makeCommand, cmakeGenerator);
+	public Vs6BuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+		super(generator, makeCommand, cmakeGenerator);
 	}
 	
 	@Override
@@ -38,6 +38,7 @@ public class Vs6BuildCommand extends BuildCommand {
 	}
 	
 	private String workspace(final String cmakeGenerator) {
+		File binaryDir = generator.getBindir();
 		String [] workspaces = binaryDir.list(new FilenameFilter() {
 			 public boolean accept(File dir, String name) {
 				 return name.endsWith(workspaceExtentions.get(cmakeGenerator));

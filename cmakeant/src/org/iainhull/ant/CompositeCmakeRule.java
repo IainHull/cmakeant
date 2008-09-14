@@ -17,28 +17,28 @@ public class CompositeCmakeRule implements CmakeRule {
 		this.second = second;
 	}
 
-	public File getBinaryDir() {
-		File ret = second.getBinaryDir();
+	public File getBindir() {
+		File ret = second.getBindir();
 		if (ret == null) {
-			ret = first.getBinaryDir();
+			ret = first.getBindir();
 		}
 		return ret;
 	}
 
-	public BuildType getBuildType() {
-		BuildType ret = second.getBuildType();
+	public BuildType getBuildtype() {
+		BuildType ret = second.getBuildtype();
 		if (ret == null) {
-			ret = first.getBuildType();
+			ret = first.getBuildtype();
 		}
 		return ret;
 	}
 
-	public void setBinaryDir(File binaryDir) {
-		second.setBinaryDir(binaryDir);
+	public void setBindir(File binaryDir) {
+		second.setBindir(binaryDir);
 	}
 
-	public void setBuildType(BuildType buildType) {
-		second.setBuildType(buildType);
+	public void setBuildtype(BuildType buildType) {
+		second.setBuildtype(buildType);
 	}
 
 	public Variable createVariable() {

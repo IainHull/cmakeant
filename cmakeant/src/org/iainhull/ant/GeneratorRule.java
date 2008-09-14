@@ -50,20 +50,20 @@ public class GeneratorRule implements CmakeRule {
 		return platform == null || platform.equals("");
 	}
 
-	public File getBinaryDir() {
-		return rule.getBinaryDir();
+	public File getBindir() {
+		return rule.getBindir();
 	}
 
-	public BuildType getBuildType() {
-		return rule.getBuildType();
+	public BuildType getBuildtype() {
+		return rule.getBuildtype();
 	}
 
-	public void setBinaryDir(File binaryDir) {
-		this.rule.setBinaryDir(binaryDir);
+	public void setBindir(File binaryDir) {
+		this.rule.setBindir(binaryDir);
 	}
 
-	public void setBuildType(BuildType buildType) {
-		this.rule.setBuildType(buildType);
+	public void setBuildtype(BuildType buildType) {
+		this.rule.setBuildtype(buildType);
 	}
 
 	public Variable createVariable() {

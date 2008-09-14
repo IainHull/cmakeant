@@ -29,17 +29,17 @@ public class CmakeRuleTest extends TestCase {
 		File one = new File("one");
 		File two = new File("two");
 		
-		assertNull(composite.getBinaryDir());
-		first.setBinaryDir(one);
-		assertEquals(one, composite.getBinaryDir());
-		second.setBinaryDir(two);
-		assertEquals(two, composite.getBinaryDir());
+		assertNull(composite.getBindir());
+		first.setBindir(one);
+		assertEquals(one, composite.getBindir());
+		second.setBindir(two);
+		assertEquals(two, composite.getBindir());
 		
-		assertNull(composite.getBuildType());
-		first.setBuildType(BuildType.Debug);
-		assertEquals(BuildType.Debug, composite.getBuildType());
-		second.setBuildType(BuildType.Release);
-		assertEquals(BuildType.Release, composite.getBuildType());	
+		assertNull(composite.getBuildtype());
+		first.setBuildtype(BuildType.Debug);
+		assertEquals(BuildType.Debug, composite.getBuildtype());
+		second.setBuildtype(BuildType.Release);
+		assertEquals(BuildType.Release, composite.getBuildtype());	
 	}
 
 	public void testCompositeProperties() {

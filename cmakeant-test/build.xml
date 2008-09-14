@@ -69,7 +69,7 @@
     <target name="test.basic" description="Test the task" depends="jar">
         <delete dir="cmake/binary" />
         <taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${cmakeant.jar}"/>
-        <cmake sourceDir="cmake/src" binaryDir="cmake/binary">
+        <cmake srcdir="cmake/src" bindir="cmake/binary">
 			<!--generator name="Visual Studio 6" platform="win" /-->
 			<generator name="Visual Studio 8 2005" platform="win" />
 			<generator name="Unix Makefiles" platform="linux" />

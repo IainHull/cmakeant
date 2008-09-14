@@ -29,7 +29,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
 
 	public CmakeBuilder() {
-		cmakeRule.setBinaryDir(CURRENT_DIR);
+		cmakeRule.setBindir(CURRENT_DIR);
 	}
 	
 	
@@ -38,7 +38,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	 *  
 	 * @return the source directory
 	 */
-	public File getSourceDir() {
+	public File getSrcdir() {
 		return this.sourceDir;
 	}
 
@@ -47,24 +47,24 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	 *  
 	 * @param sourceDir the source directory
 	 */
-	public void setSourceDir(File sourceDir) {
+	public void setSrcdir(File sourceDir) {
 		this.sourceDir = sourceDir;
 	}
 
-	public File getBinaryDir() {
-		return this.cmakeRule.getBinaryDir();
+	public File getBindir() {
+		return this.cmakeRule.getBindir();
 	}
 
-	public void setBinaryDir(File binaryDir) {
-		this.cmakeRule.setBinaryDir(binaryDir);
+	public void setBindir(File binaryDir) {
+		this.cmakeRule.setBindir(binaryDir);
 	}
 
-	public BuildType getBuildType() {
-		return this.cmakeRule.getBuildType();
+	public BuildType getBuildtype() {
+		return this.cmakeRule.getBuildtype();
 	}
 
-	public void setBuildType(BuildType buildType) {
-		this.cmakeRule.setBuildType(buildType);
+	public void setBuildtype(BuildType buildType) {
+		this.cmakeRule.setBuildtype(buildType);
 	}	
 	
 	
@@ -123,7 +123,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		GeneratorRule rule = getBestGenerator();
 		testPaths(rule);
 		executeCmake(rule);
-		CacheVariables vars = readCacheVariables(rule.getBinaryDir());
+		CacheVariables vars = readCacheVariables(rule.getBindir());
 		executeBuild(rule, vars);
 		executeCmakeVars(vars);
 	}
@@ -158,12 +158,12 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		try {
 			log("Calling CMake");
 			log("Source Directory: " + sourceDir);
-			log("Binary Directory: " + rule.getBinaryDir());
+			log("Binary Directory: " + rule.getBindir());
 			if (rule != null) {
 				log("Generator: " + rule);
 			}
 	
-			int ret = doExecute(commandLine.toArray(new String[0]), rule.getBinaryDir());
+			int ret = doExecute(commandLine.toArray(new String[0]), rule.getBindir());
 			if (ret != 0) {
 				throw new BuildException(CMAKE_COMMAND
 						+ " returned error code " + ret);
@@ -181,8 +181,8 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	
 			log("Building cmake output");
 			int ret = doExecute(
-					BuildCommand.inferCommand(rule.getBinaryDir(), makeCommand, cmakeGenerator), 
-					rule.getBinaryDir());
+					BuildCommand.inferCommand(rule, makeCommand, cmakeGenerator), 
+					rule.getBindir());
 			
 			if (ret != 0) {
 				throw new BuildException(makeCommand + " returned error code "
@@ -285,7 +285,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	
 	private void testPaths(GeneratorRule rule) {
 		testSourceDir(sourceDir);
-		testBinaryDir(rule.getBinaryDir());
+		testBinaryDir(rule.getBindir());
 	}
 
 	/**
