@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * @author iain
  */
-public interface CmakeRule {
+public interface Params {
 
 	/**
 	 * Get the cmake binary directory, where the cmake generated makefiles/

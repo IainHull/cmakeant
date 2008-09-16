@@ -1,33 +1,64 @@
-/**
- * 
- */
+
 package org.iainhull.ant;
 
 import java.io.File;
 import java.util.Map;
 
-public class GeneratorRule implements CmakeRule {
-	
-	public GeneratorRule(CmakeBuilder builder) {
-		this.rule = new CompositeCmakeRule(builder, new SimpleCmakeRule());
-	}
+/**
+ * A GeneratorRule specifies a CMake generator to use for a specific
+ * platform.  It can also override other Cmake params if this generator
+ * is selected.
+ *   
+ * @author iain.hull
+ */
+public class GeneratorRule implements Params {
 	
 	private String name;
 	private String platform;
-	private CmakeRule rule;
+	private Params params;
 
+	/**
+	 * Create a new GeneratorRule.
+	 */
+	public GeneratorRule(CmakeBuilder builder) {
+		this.params = new CompositeParams(builder, new SimpleParams());
+	}
+	
+	/**
+	 * Return the name of the GeneratorRule.
+	 * 
+	 * @return the name of the GeneratorRule.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Set the name of the GeneratorRule, this must a valid cmake generator
+	 * name (see cmake -G parameter).
+	 * 
+	 * @return the name of the GeneratorRule.
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Return the platform this rule is enabled for.
+	 * 
+	 * @return the platform this rule is enabled for.
+	 */
 	public String getPlatform() {
 		return platform;
 	}
 
+	/**
+	 * Set the platform this rule is enabled for, this is a fuzzy match
+	 * for the system platform returned by the java code 
+	 * <code>System.getProperty("os.name")</code>.
+	 * 
+	 * @param platform  this rule is enabled for.
+	 */
 	public void setPlatform(String platform) {
 		this.platform = platform;
 	}
@@ -51,26 +82,26 @@ public class GeneratorRule implements CmakeRule {
 	}
 
 	public File getBindir() {
-		return rule.getBindir();
+		return params.getBindir();
 	}
 
 	public BuildType getBuildtype() {
-		return rule.getBuildtype();
+		return params.getBuildtype();
 	}
 
 	public void setBindir(File binaryDir) {
-		this.rule.setBindir(binaryDir);
+		this.params.setBindir(binaryDir);
 	}
 
 	public void setBuildtype(BuildType buildType) {
-		this.rule.setBuildtype(buildType);
+		this.params.setBuildtype(buildType);
 	}
 
 	public Variable createVariable() {
-		return rule.createVariable();
+		return params.createVariable();
 	}	
 	
 	public Map<String, Variable> getVariables() {
-		return rule.getVariables();
+		return params.getVariables();
 	}
 }

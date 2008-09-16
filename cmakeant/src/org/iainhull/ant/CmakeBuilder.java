@@ -18,21 +18,50 @@ import org.apache.tools.ant.types.LogLevel;
  * 
  * @author iain.hull
  */
-public class CmakeBuilder extends Task implements CmakeRule {
+public class CmakeBuilder extends Task implements Params {
 	private static String CMAKE_COMMAND = "cmake";
 	private static String CMAKE_CACHE = "CMakeCache.txt";
 	private static File CURRENT_DIR = new File(".");
 
-	private CmakeRule cmakeRule = new SimpleCmakeRule();
+	private Params params = new SimpleParams();
 	private File sourceDir = CURRENT_DIR;
-	private List<GeneratorRule> rules = new ArrayList<GeneratorRule>();
+	private List<GeneratorRule> genRules = new ArrayList<GeneratorRule>();
 	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
 
+	/**
+	 * Create a new CmakeBuilder
+	 */
 	public CmakeBuilder() {
-		cmakeRule.setBindir(CURRENT_DIR);
+		params.setBindir(CURRENT_DIR);
 	}
 	
 	
+	/**
+	 * Call cmake as instructed, then build the makefiles/projects.
+	 */
+	public void execute() {
+		String osName = getOperatingSystem();
+		String osArch = System.getProperty("os.arch");
+		String osVer = System.getProperty("os.version");
+	
+		log("OS name: " + osName, Project.MSG_VERBOSE);
+		log("OS arch: " + osArch, Project.MSG_VERBOSE);
+		log("OS version: " + osVer, Project.MSG_VERBOSE);
+	
+		for (GeneratorRule g : genRules) {
+			log("Generator: " + g + (g.matches(osName) ? " (match)" : ""),
+					Project.MSG_VERBOSE);
+		}
+		
+		GeneratorRule rule = getBestGenerator();
+		testPaths(rule);
+		executeCmake(rule);
+		CacheVariables vars = readCacheVariables(rule.getBindir());
+		executeBuild(rule, vars);
+		processReadVars(vars);
+	}
+
+
 	/**
 	 * Get the cmake source directory, where CMakeLists.txt lives.
 	 *  
@@ -51,24 +80,6 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		this.sourceDir = sourceDir;
 	}
 
-	public File getBindir() {
-		return this.cmakeRule.getBindir();
-	}
-
-	public void setBindir(File binaryDir) {
-		this.cmakeRule.setBindir(binaryDir);
-	}
-
-	public BuildType getBuildtype() {
-		return this.cmakeRule.getBuildtype();
-	}
-
-	public void setBuildtype(BuildType buildType) {
-		this.cmakeRule.setBuildtype(buildType);
-	}	
-	
-	
-	
 	/**
 	 * Create and add a new GeneratorRule, these are used to decide which
 	 * generator cmake uses based on the host operating system.
@@ -77,10 +88,11 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	 */
 	public GeneratorRule createGenerator() {
 		GeneratorRule g = new GeneratorRule(this);
-		rules.add(g);
+		genRules.add(g);
 		return g;
 	}
-	
+
+
 	/** 
 	 * Create and add a new ReadVariable, these enable CmakeBuilder to
 	 * set the ant variables based on CMakeCache.txt entries.
@@ -90,54 +102,36 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		readVars.add(v);
 		return v;
 	}
+
+
+	public File getBindir() {
+		return this.params.getBindir();
+	}
+
+	public void setBindir(File binaryDir) {
+		this.params.setBindir(binaryDir);
+	}
+
+	public BuildType getBuildtype() {
+		return this.params.getBuildtype();
+	}
+
+	public void setBuildtype(BuildType buildType) {
+		this.params.setBuildtype(buildType);
+	}	
+	
+	
 	
 	/** 
 	 * Create and add a new Variable, these enable CmakeBuilder to
 	 * set the ant variables based on CMakeCache.txt entries.
 	 */
 	public Variable createVariable() {
-		return cmakeRule.createVariable();
+		return params.createVariable();
 	}	
 	
 	public Map<String, Variable> getVariables() {
-		return cmakeRule.getVariables();
-	}
-
-	/**
-	 * Call cmake as instructed, then build the makefiles/projects.
-	 */
-	public void execute() {
-		String osName = getOperatingSystem();
-		String osArch = System.getProperty("os.arch");
-		String osVer = System.getProperty("os.version");
-
-		log("OS name: " + osName, Project.MSG_VERBOSE);
-		log("OS arch: " + osArch, Project.MSG_VERBOSE);
-		log("OS version: " + osVer, Project.MSG_VERBOSE);
-
-		for (GeneratorRule g : rules) {
-			log("Generator: " + g + (g.matches(osName) ? " (match)" : ""),
-					Project.MSG_VERBOSE);
-		}
-		
-		GeneratorRule rule = getBestGenerator();
-		testPaths(rule);
-		executeCmake(rule);
-		CacheVariables vars = readCacheVariables(rule.getBindir());
-		executeBuild(rule, vars);
-		executeCmakeVars(vars);
-	}
-
-	CacheVariables readCacheVariables(File binaryDir) {
-		File cache = new File(binaryDir, CMAKE_CACHE);
-		CacheVariables vars;
-		try {
-			vars = new CacheVariables(cache);
-		}
-		catch (IOException e) {
-			throw new BuildException("Cannot read cmake cache: " + cache);
-		}
-		return vars;
+		return params.getVariables();
 	}
 
 	private void executeCmake(GeneratorRule rule) {
@@ -195,7 +189,7 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	
 	}
 
-	private void executeCmakeVars(CacheVariables vars) {
+	private void processReadVars(CacheVariables vars) {
 		for (ReadVariable prop : readVars) {
 			Variable v = vars.getVariable(prop.getName());
 			if (v != null) {
@@ -208,8 +202,45 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		}
 	}
 
+	private void testPaths(GeneratorRule rule) {
+		testSourceDir(sourceDir);
+		testBinaryDir(rule.getBindir());
+	}
+
+
+	private GeneratorRule getBestGenerator() {
+		for (GeneratorRule g : genRules) {
+			if (g.matches(getOperatingSystem())) {
+				return g;
+			}
+		}
+		return createGenerator();
+	}
+
+
+	/**
+	 * Read the CacheVariables generated by executing CMake
+	 * This is package private to override during testing.
+	 * 
+	 * @param binaryDir The directory to find the CMakeCache.txt
+	 * @return the CacheVariables generated by executing CMake.
+	 */
+	CacheVariables readCacheVariables(File binaryDir) {
+		File cache = new File(binaryDir, CMAKE_CACHE);
+		CacheVariables vars;
+		try {
+			vars = new CacheVariables(cache);
+		}
+		catch (IOException e) {
+			throw new BuildException("Cannot read cmake cache: " + cache);
+		}
+		return vars;
+	}
+
+
 	/**
 	 * Utility to execute an external command.
+	 * This is package private to override during testing.
 	 * 
 	 * @param commandLine 
 	 * 		array of command line arguments
@@ -237,11 +268,11 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	
 	/**
 	 * Test that the source directory is valid.
-	 * This is protected to aid testing.
+	 * This is package private to override during testing.
 	 * 
 	 * @param sourceDir the directory to test
 	 */
-	protected void testSourceDir(File sourceDir) {
+	void testSourceDir(File sourceDir) {
 		if (sourceDir == null) {
 			throw new BuildException("Source directory not set");
 		}
@@ -259,11 +290,11 @@ public class CmakeBuilder extends Task implements CmakeRule {
 	
 	/**
 	 * Test that the binary directory is valid.
-	 * This is protected to aid testing.
+	 * This is package private to override during testing.
 	 * 
 	 * @param binaryDir the directory to test
 	 */
-	protected void testBinaryDir(File binaryDir) {
+	void testBinaryDir(File binaryDir) {
 		if (binaryDir == null) {
 			throw new BuildException("Binary directory not set");
 		}
@@ -283,27 +314,13 @@ public class CmakeBuilder extends Task implements CmakeRule {
 		}
 	}
 	
-	private void testPaths(GeneratorRule rule) {
-		testSourceDir(sourceDir);
-		testBinaryDir(rule.getBindir());
-	}
-
 	/**
 	 * Return the host operating system name.
-	 * This is protected to aid testing.
+	 * This is package private to override during testing.
 	 * 
 	 * @return the host operating system name.
 	 */
-	protected String getOperatingSystem() {
+	String getOperatingSystem() {
 		return System.getProperty("os.name");
-	}
-
-	private GeneratorRule getBestGenerator() {
-		for (GeneratorRule g : rules) {
-			if (g.matches(getOperatingSystem())) {
-				return g;
-			}
-		}
-		return createGenerator();
 	}
 }

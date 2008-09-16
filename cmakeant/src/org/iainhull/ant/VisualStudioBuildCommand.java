@@ -1,40 +1,48 @@
 package org.iainhull.ant;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.tools.ant.BuildException;
-
 public class VisualStudioBuildCommand extends BuildCommand {
-	private final static Map<String, String> workspaceExtentions = createWorkspaceExtentions();
-	private final WorkSpaceLocator locator;
+	protected final Map<String, String> workspaceExtentions;
+	protected final WorkSpaceLocator locator;
 	
 	public VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
-		super(generator, makeCommand, cmakeGenerator);
-		this.locator = new WorkSpaceLocator();
+		this(generator, makeCommand, cmakeGenerator, new WorkSpaceLocator(), createWorkspaceExtentions());
 	}
 
 	VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator, WorkSpaceLocator locator) {
+		this(generator, makeCommand, cmakeGenerator, locator, createWorkspaceExtentions());
+	}
+	
+	protected VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator, WorkSpaceLocator locator, Map<String, String> workspaceExtentions) {
 		super(generator, makeCommand, cmakeGenerator);
 		this.locator = locator;
+		this.workspaceExtentions = workspaceExtentions;
 	}
+
 	
 	@Override
 	protected String[] buildCommand() {
-		String buildType = generator.getBuildtype() == null ? "Release" : generator.getBuildtype().toString(); 
 		return new String[] { 
 				makeCommand, 
 				workspace(workspaceExtentions.get(cmakeGenerator)), 
 				"/Build", 
-				buildType};
+				defaultBuildType(generator.getBuildtype()).toString()};
 	}
 
 	@Override
 	protected boolean canBuild() {
 		return workspaceExtentions.containsKey(cmakeGenerator);
+	}
+	
+	protected BuildType defaultBuildType(BuildType buildType) {
+		if (buildType != null) {
+			return buildType;
+		}
+		return BuildType.Release;
 	}
 	
 	private static Map<String, String> createWorkspaceExtentions() {
@@ -47,7 +55,7 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		return Collections.unmodifiableMap(map);
 	}
 	
-	private String workspace(final String extension) {
+	protected String workspace(final String extension) {
 		File binaryDir = generator.getBindir();
 		return locator.findByExtension(binaryDir, extension);
 	}

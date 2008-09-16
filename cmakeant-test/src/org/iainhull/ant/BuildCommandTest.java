@@ -1,5 +1,6 @@
 package org.iainhull.ant;
 
+import java.io.File;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
@@ -27,10 +28,61 @@ public class BuildCommandTest extends TestCase {
 		map.put("Visual Studio 8 2005", "sln");
 		map.put("Visual Studio 8 2005 Win64", "sln");
 */		
-		BuildCommand b = new VisualStudioBuildCommand(generator, "buildpath", "Visual Studio 8 2005");
+		String expectedWorkspace = "testworkspace";
+		String expectedBuildpath = "buildpath";
+		
+		BuildCommand b = new VisualStudioBuildCommand(
+				generator, 
+				expectedBuildpath, 
+				"Visual Studio 8 2005", 
+				new FakeWorkSpaceLocator(expectedWorkspace) );
+		
 		assertTrue(b.canBuild());
 		
-		String [] commandLine = { "one" };
+		String [] commandLine = { 
+				expectedBuildpath, 
+				new File(generator.getBindir(), expectedWorkspace).toString(),
+				"/Build",
+				BuildType.Release.toString() };
+		
+		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+
+		generator.setBuildtype(BuildType.Debug);
+		commandLine = new String [] { 
+				expectedBuildpath, 
+				new File(generator.getBindir(), expectedWorkspace).toString(),
+				"/Build",
+				BuildType.Debug.toString() };
+		
+		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+	}
+	
+	public void testVs6BuildCommand() {
+		String expectedWorkspace = "testworkspace";
+		String expectedBuildpath = "buildpath";
+		
+		BuildCommand b = new Vs6BuildCommand(
+				generator, 
+				expectedBuildpath, 
+				"Visual Studio 6", 
+				new FakeWorkSpaceLocator(expectedWorkspace) );
+		
+		assertTrue(b.canBuild());
+		
+		String [] commandLine = { 
+				expectedBuildpath, 
+				new File(generator.getBindir(), expectedWorkspace).toString(),
+				"/MAKE",
+				"ALL - " + BuildType.Release.toString() };
+		
+		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+
+		generator.setBuildtype(BuildType.Debug);
+		commandLine = new String [] { 
+				expectedBuildpath, 
+				new File(generator.getBindir(), expectedWorkspace).toString(),
+				"/MAKE",
+				"ALL - " + BuildType.Debug.toString() };
 		
 		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
 	}

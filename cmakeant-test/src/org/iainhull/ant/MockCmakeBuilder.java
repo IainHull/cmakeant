@@ -26,6 +26,7 @@ public class MockCmakeBuilder extends CmakeBuilder {
 		index = 0;
 	}
 
+	@Override
 	int doExecute(String [] commandLine, File workingDirectory) throws IOException {
 		Assert.assertTrue(index < asserts.length);
 		int ret = asserts[index].assertCommand(commandLine, workingDirectory);
