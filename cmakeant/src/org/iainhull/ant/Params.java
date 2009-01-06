@@ -30,6 +30,9 @@ public interface Params {
 	public BuildType getBuildtype();
 	public void setBuildtype(BuildType buildType);
 	
+	public String getTarget();
+	public void setTarget(String target);
+	
 	
 	public Variable createVariable();
 	public Map<String, Variable> getVariables();

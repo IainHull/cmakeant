@@ -45,7 +45,7 @@ public class BuildCommandTest extends TestCase {
 				"/Build",
 				BuildType.Release.toString() };
 		
-		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+		assertTrue(Arrays.equals(commandLine, b.buildCommand()));
 
 		generator.setBuildtype(BuildType.Debug);
 		commandLine = new String [] { 
@@ -54,7 +54,18 @@ public class BuildCommandTest extends TestCase {
 				"/Build",
 				BuildType.Debug.toString() };
 		
-		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+		assertTrue(Arrays.equals(commandLine, b.buildCommand()));
+
+		generator.setTarget("SomeTarget");
+		commandLine = new String [] { 
+				expectedBuildpath, 
+				new File(generator.getBindir(), expectedWorkspace).toString(),
+				"/Build",
+				BuildType.Debug.toString(),
+				"/Project",
+				"SomeTarget" };
+		
+		assertTrue(Arrays.equals(commandLine, b.buildCommand()));
 	}
 	
 	public void testVs6BuildCommand() {
@@ -75,7 +86,7 @@ public class BuildCommandTest extends TestCase {
 				"/MAKE",
 				"ALL - " + BuildType.Release.toString() };
 		
-		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+		assertTrue(Arrays.equals(commandLine, b.buildCommand()));
 
 		generator.setBuildtype(BuildType.Debug);
 		commandLine = new String [] { 
@@ -84,6 +95,6 @@ public class BuildCommandTest extends TestCase {
 				"/MAKE",
 				"ALL - " + BuildType.Debug.toString() };
 		
-		assertEquals(Arrays.toString(commandLine), Arrays.toString(b.buildCommand()));
+		assertTrue(Arrays.equals(commandLine, b.buildCommand()));
 	}
 }

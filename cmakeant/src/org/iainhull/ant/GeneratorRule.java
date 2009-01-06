@@ -104,4 +104,12 @@ public class GeneratorRule implements Params {
 	public Map<String, Variable> getVariables() {
 		return params.getVariables();
 	}
+
+	public String getTarget() {
+		return params.getTarget();
+	}
+
+	public void setTarget(String target) {
+		params.setTarget(target);
+	}
 }

@@ -122,4 +122,26 @@ public class CmakeBuilderTest extends TestCase {
 
 		builder.execute();
 	}
+
+	public void testCmakeonly() {
+		File source = new File("source");
+		File binary = new File("binary");
+		
+		GeneratorRule g = builder.createGenerator();
+		g.setName("test generator");
+		
+		builder.setAsserts(
+			new AssertExecute.Command(
+				binary, "cmake", "-G", "test generator", source.toString() ));
+		
+		builder.setExpectedSourceDir(source);
+		builder.setExpectedBinaryDir(binary);
+
+		builder.setSrcdir(source);
+		builder.setBindir(binary);
+		builder.setCmakeonly(true);
+
+		builder.execute();
+	}
+
 }

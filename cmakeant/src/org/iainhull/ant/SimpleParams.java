@@ -12,6 +12,7 @@ import java.util.Map;
 public class SimpleParams implements Params {
 	private File binaryDir;
 	private BuildType buildType;
+	private String target;
 	private List<Variable> vars = new ArrayList<Variable>();
 	
 	
@@ -23,6 +24,10 @@ public class SimpleParams implements Params {
 		return buildType;
 	}
 
+	public String getTarget() {
+		return target;
+	}
+
 	public void setBindir(File binaryDir) {
 		this.binaryDir = binaryDir;
 	}
@@ -31,6 +36,11 @@ public class SimpleParams implements Params {
 		this.buildType = buildType;
 	}
 
+	public void setTarget(String target) {
+		this.target = target;
+	}
+	
+	
 	public Variable createVariable() {
 		Variable v = new Variable();
 		vars.add(v);

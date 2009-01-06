@@ -16,15 +16,26 @@
 	</target>
 
 	<target name="jar" description="JARs the Task" depends="compile">
-		<jar destfile="${ant.project.name}.jar" basedir="classes" />
+		<jar destfile="${ant.project.name}.jar" basedir="classes">
+			<manifest>
+				<section name="org.iainhull.ant">
+					<attribute name="Specification-Title" value="Cmake Ant" />
+					<attribute name="Specification-Version" value="${version}" />
+					<attribute name="Specification-Vendor" value="Iain Hull" />
+					<attribute name="Implementation-Title" value="Cmake Ant" />
+					<attribute name="Implementation-Version" value="${version} ${TODAY}" />
+					<attribute name="Implementation-Vendor" value="Iain Hull" />
+				</section>
+			</manifest>
+		</jar>
 	</target>
 
-    <target name="test" description="Test the task" depends="jar">
-        <taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${ant.project.name}.jar"/>
-        <cmake sourceDir="cmake/src" binaryDir="cmake/binary">
+	<target name="test" description="Test the task" depends="jar">
+		<taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${ant.project.name}.jar"/>
+		<cmake sourceDir="cmake/src" binaryDir="cmake/binary">
 			<generator name="KDevelop3" />
 			<generator name="Unix Makefiles" platform="linux" />
 		</cmake>
-    </target>
+	</target>
 
 </project>

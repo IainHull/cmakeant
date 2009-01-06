@@ -16,11 +16,16 @@ public class Vs6BuildCommand extends VisualStudioBuildCommand {
 	
 	@Override
 	protected String[] buildCommand() {
+		String target = generator.getTarget();
+		if (target == null) {
+			target = "ALL";
+		}
+		
 		return new String[] { 
 				makeCommand, 
 				workspace(workspaceExtentions.get(cmakeGenerator)), 
 				"/MAKE", 
-				"ALL - " + defaultBuildType(generator.getBuildtype()).toString()
+				target + " - " + defaultBuildType(generator.getBuildtype()).toString()
 				};
 	}
 

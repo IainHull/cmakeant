@@ -9,7 +9,13 @@ public class MakeBuildCommand extends BuildCommand {
 
 	@Override
 	protected String[] buildCommand() {
-		return new String [] { makeCommand };
+		String target = generator.getTarget();
+		if (target == null) {
+			return new String [] { makeCommand };
+		}
+		else {
+			return new String [] { makeCommand, target };
+		}
 	}
 
 	@Override

@@ -27,6 +27,7 @@ public class CmakeBuilder extends Task implements Params {
 	private File sourceDir = CURRENT_DIR;
 	private List<GeneratorRule> genRules = new ArrayList<GeneratorRule>();
 	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
+	private boolean cmakeonly = false;
 
 	/**
 	 * Create a new CmakeBuilder
@@ -55,10 +56,32 @@ public class CmakeBuilder extends Task implements Params {
 		
 		GeneratorRule rule = getBestGenerator();
 		testPaths(rule);
-		executeCmake(rule);
+		
+		if(cmakeonly || !testBuildAlreadyExists(rule.getBindir())) {
+			executeCmake(rule);			
+		}
+
 		CacheVariables vars = readCacheVariables(rule.getBindir());
-		executeBuild(rule, vars);
+
+		if (!cmakeonly) {
+			executeBuild(rule, vars);
+			// Incase variables change if cmake is run a second time
+			vars = readCacheVariables(rule.getBindir());
+		}
+		
 		processReadVars(vars);
+	}
+
+
+	/**
+	 * Returns true if cmake has already created the build files.
+	 * 
+	 * @param binaryDir the binary directory
+	 * @return true if cmake has already created the build files.
+	 */
+	private boolean testBuildAlreadyExists(File binaryDir) {
+		File cache = new File(binaryDir, CMAKE_CACHE);
+		return cache.exists() && cache.canRead();
 	}
 
 
@@ -120,7 +143,21 @@ public class CmakeBuilder extends Task implements Params {
 		this.params.setBuildtype(buildType);
 	}	
 	
+	public String getTarget() {
+		return params.getTarget();
+	}
+
+	public void setTarget(String target) {
+		params.setTarget(target);
+	}
 	
+	public boolean getCmakeonly() {
+		return this.cmakeonly;
+	}
+	
+	public void setCmakeonly(boolean cmakeonly) {
+		this.cmakeonly = cmakeonly;
+	}
 	
 	/** 
 	 * Create and add a new Variable, these enable CmakeBuilder to
@@ -256,6 +293,7 @@ public class CmakeBuilder extends Task implements Params {
 		
 		exec.setWorkingDirectory(workingDirectory);
 		exec.setCommandline(commandLine);
+		exec.setVMLauncher(true);
 
 		StringBuilder commandText = new StringBuilder();
 		commandText.append(commandLine[0]);

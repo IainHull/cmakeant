@@ -32,6 +32,14 @@ public class CompositeParams implements Params {
 		}
 		return ret;
 	}
+	
+	public String getTarget() {
+		String ret = second.getTarget();
+		if (ret == null) {
+			ret = first.getTarget();
+		}
+		return ret;
+	}
 
 	public void setBindir(File binaryDir) {
 		second.setBindir(binaryDir);
@@ -44,6 +52,11 @@ public class CompositeParams implements Params {
 	public Variable createVariable() {
 		return second.createVariable();
 	}
+
+	public void setTarget(String target) {
+		second.setTarget(target);
+	}
+	
 
 	public Map<String, Variable> getVariables() {
 		Map<String, Variable> ret = new HashMap<String, Variable>(first.getVariables());

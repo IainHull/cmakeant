@@ -1,8 +1,11 @@
 package org.iainhull.ant;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VisualStudioBuildCommand extends BuildCommand {
@@ -26,11 +29,22 @@ public class VisualStudioBuildCommand extends BuildCommand {
 	
 	@Override
 	protected String[] buildCommand() {
-		return new String[] { 
+		String [] ret = new String[] { 
 				makeCommand, 
 				workspace(workspaceExtentions.get(cmakeGenerator)), 
 				"/Build", 
 				defaultBuildType(generator.getBuildtype()).toString()};
+
+		String target = generator.getTarget();
+		if (target != null) {
+			List<String> list = new ArrayList<String>();
+			list.addAll(Arrays.asList(ret));
+			list.add("/Project");
+			list.add(target);
+			return list.toArray(ret);
+		}
+	
+		return ret;
 	}
 
 	@Override
