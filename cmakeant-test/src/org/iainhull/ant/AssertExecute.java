@@ -3,11 +3,17 @@
  */
 package org.iainhull.ant;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.File;
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
+/**
+ * Assertion interface used by MockCmakeBuilder to test builders pass 
+ * the expected parameters.
+ *  
+ * @author iain.hull
+ */
 public interface AssertExecute {
 	int assertCommand(String [] commandLine, File workingDirectory);
 	
@@ -25,8 +31,8 @@ public interface AssertExecute {
 			System.out.println(Arrays.toString(commandLine));
 			System.out.println(workingDirectory);
 			
-			Assert.assertEquals("Test command line", Arrays.toString(this.commandLine), Arrays.toString(commandLine));
-			Assert.assertEquals("Test working directory", this.workingDirectory, workingDirectory);
+			assertEquals("Test command line", Arrays.toString(this.commandLine), Arrays.toString(commandLine));
+			assertEquals("Test working directory", this.workingDirectory, workingDirectory);
 			
 			return 0;
 		}

@@ -2,20 +2,21 @@ package org.iainhull.ant;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class CmakeBuilderTest extends TestCase {
+
+public class CmakeBuilderTest {
 
 	private MockCmakeBuilder builder;
 	
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		
+	@Before
+	public void setUp() throws Exception {
 		builder = new MockCmakeBuilder();
 	}
 	
+	@Test
 	public void testSimple() {
 		File source = new File("source");
 		File binary = new File("binary");
@@ -35,6 +36,7 @@ public class CmakeBuilderTest extends TestCase {
 		builder.execute();
 	}
 
+	@Test
 	public void testVariables() {
 		File source = new File("source");
 		File binary = new File("binary");
@@ -63,6 +65,7 @@ public class CmakeBuilderTest extends TestCase {
 		builder.execute();
 	}
 	
+	@Test
 	public void testGeneratorVariables() {
 		File source = new File("source");
 		File binary = new File("binary");
@@ -99,6 +102,7 @@ public class CmakeBuilderTest extends TestCase {
 		builder.execute();
 	}
 	
+	@Test
 	public void testGeneratorBindir() {
 		File source = new File("source");
 		File binary = new File("binary");
@@ -123,6 +127,7 @@ public class CmakeBuilderTest extends TestCase {
 		builder.execute();
 	}
 
+	@Test
 	public void testCmakeonly() {
 		File source = new File("source");
 		File binary = new File("binary");
@@ -143,5 +148,4 @@ public class CmakeBuilderTest extends TestCase {
 
 		builder.execute();
 	}
-
 }

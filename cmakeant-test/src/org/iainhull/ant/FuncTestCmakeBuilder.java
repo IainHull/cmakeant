@@ -9,7 +9,8 @@ public class FuncTestCmakeBuilder extends BuildFileTest {
 	}
 
 	
-	public void setUp() {
+	public void setUp() throws Exception {
+		super.setUp();
 		// initialize Ant
 		configureProject("build.xml");
 	}

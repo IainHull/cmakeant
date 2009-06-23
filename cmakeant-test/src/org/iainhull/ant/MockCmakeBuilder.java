@@ -1,9 +1,10 @@
 package org.iainhull.ant;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
-
-import junit.framework.Assert;
 
 public class MockCmakeBuilder extends CmakeBuilder {	
 	public static final String GENERATOR = "generator";
@@ -28,7 +29,7 @@ public class MockCmakeBuilder extends CmakeBuilder {
 
 	@Override
 	int doExecute(String [] commandLine, File workingDirectory) throws IOException {
-		Assert.assertTrue(index < asserts.length);
+		assertTrue(index < asserts.length);
 		int ret = asserts[index].assertCommand(commandLine, workingDirectory);
 		index++;
 		return ret;
@@ -54,7 +55,7 @@ public class MockCmakeBuilder extends CmakeBuilder {
 	@Override
 	protected void testSourceDir(File sourceDir) {
 		if (expectedSourceDir != null) {
-			Assert.assertEquals(expectedSourceDir, sourceDir);
+			assertEquals(expectedSourceDir, sourceDir);
 		}
 		else {
 			super.testSourceDir(sourceDir);
@@ -64,7 +65,7 @@ public class MockCmakeBuilder extends CmakeBuilder {
 	@Override
 	protected void testBinaryDir(File binaryDir) {
 		if (expectedSourceDir != null) {
-			Assert.assertEquals(expectedBinaryDir, binaryDir);
+			assertEquals(expectedBinaryDir, binaryDir);
 		}
 		else {
 			super.testSourceDir(binaryDir);

@@ -1,30 +1,30 @@
 package org.iainhull.ant;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
 
-public class CmakeRuleTest extends TestCase {
+public class CmakeRuleTest {
 
 	private SimpleParams first;
 	private SimpleParams second;
 	private CompositeParams composite;
 
-	public CmakeRuleTest(String arg0) {
-		super(arg0);
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
-		
+	@Before
+	public void setUp() throws Exception {
 		this.first = new SimpleParams();
 		this.second = new SimpleParams();
 		this.composite = new CompositeParams(first, second);
 	}
 	
+	@Test
 	public void testComposite() {
 		File one = new File("one");
 		File two = new File("two");
@@ -42,6 +42,7 @@ public class CmakeRuleTest extends TestCase {
 		assertEquals(BuildType.Release, composite.getBuildtype());	
 	}
 
+	@Test
 	public void testCompositeProperties() {
 		Variable v1 = new Variable("a", Variable.STRING_TYPE, "a");
 		Variable v2 = new Variable("b", Variable.STRING_TYPE, "b1");

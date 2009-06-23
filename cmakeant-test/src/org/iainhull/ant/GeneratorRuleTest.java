@@ -1,16 +1,19 @@
 package org.iainhull.ant;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class GeneratorRuleTest extends TestCase {
+import org.junit.Before;
+import org.junit.Test;
 
-	public GeneratorRuleTest(String name) {
-		super(name);
-	}
 
-	protected void setUp() throws Exception {
+public class GeneratorRuleTest {
+
+	@Before
+	public void setUp() throws Exception {
 	}
 	
+	@Test
 	public void testDefault() {
 		GeneratorRule rule = new GeneratorRule(new CmakeBuilder());
 		assertTrue(rule.isDefault());
@@ -19,6 +22,7 @@ public class GeneratorRuleTest extends TestCase {
 		assertFalse(rule.isDefault());
 	}
 
+	@Test
 	public void testMatches() {
 		assertMatch("linux", "linux", true);
 		assertMatch("linux", "linux", true);
