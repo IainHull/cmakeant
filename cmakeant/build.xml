@@ -15,7 +15,14 @@
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpath="./lib/ant.jar" />
 	</target>
 
-	<target name="jar" description="JARs the Task" depends="compile">
+	<target name="embedsource" description="Embed the source in the jar">
+		<mkdir dir="${classes.dir}" />
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}" />
+		</copy>
+	</target>
+
+	<target name="jar" description="JARs the Task" depends="compile,embedsource">
 		<jar destfile="${ant.project.name}.jar" basedir="classes">
 			<manifest>
 				<section name="org.iainhull.ant">

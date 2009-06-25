@@ -61,7 +61,8 @@ build.</p>
 <h3>Parameters specified as nested elements</h3>
 
 <h4><code>generator</code></h4>
-<p>generator.</p>
+<p>Specify the cmake generator to use for each platform.  Child of <code>
+cmake</code>.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -96,8 +97,9 @@ build.</p>
 </table>
 
 <h4><code>variable</code></h4>
-<p>generator.</p>
-
+<p>Set cmake variables.  This can be a child of the <code>cmake</code>then 
+it is global, or a child of the <code>generator</code> then it is specific 
+to that generator.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -124,7 +126,8 @@ build.</p>
 </table>
 
 <h4><code>readvar</code></h4>
-<p>Read the value of a cmake cache variable to an ant varaiable.</p>
+<p>Read the value of a cmake cache variable to an ant varaiable. Child of 
+<code>cmake</code></p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

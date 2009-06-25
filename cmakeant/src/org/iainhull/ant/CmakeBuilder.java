@@ -184,6 +184,9 @@ public class CmakeBuilder extends Task implements Params {
 			commandLine.add(v.toString());
 		}
 
+		commandLine.add("-D");
+		commandLine.add(getBuildtypeVariable().toString());
+		
 		commandLine.add(sourceDir.toString());
 		
 		try {
@@ -203,6 +206,11 @@ public class CmakeBuilder extends Task implements Params {
 			log(e, LogLevel.ERR.getLevel());
 			throw new BuildException(e);
 		}
+	}
+
+
+	private Variable getBuildtypeVariable() {
+		return new Variable("CMAKE_BUILD_TYPE", Variable.STRING_TYPE, getBuildtype().toString());
 	}
 
 	private void executeBuild(GeneratorRule rule, CacheVariables vars) {
