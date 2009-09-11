@@ -74,7 +74,7 @@ public class CmakeBuilder extends Task implements Params {
 		GeneratorRule rule = getBestGenerator();
 		testPaths(rule);
 		
-		if(cmakeonly || !testBuildAlreadyExists(rule.getBindir())) {
+		if(cmakeonly || !testBuildAlreadyExists(rule)) {
 			executeCmake(rule);			
 		}
 
@@ -96,11 +96,19 @@ public class CmakeBuilder extends Task implements Params {
 	 * @param binaryDir the binary directory
 	 * @return true if cmake has already created the build files.
 	 */
-	private boolean testBuildAlreadyExists(File binaryDir) {
-		File cache = new File(binaryDir, CMAKE_CACHE);
-		return cache.exists() && cache.canRead();
-	}
+	private boolean testBuildAlreadyExists(GeneratorRule rule) {
+		File cache = new File(rule.getBindir(), CMAKE_CACHE);
 
+		if (cache.exists() && cache.canRead())
+		{
+			CacheVariables vars = readCacheVariables(rule.getBindir());
+			String makeCommand = vars.getVariable("CMAKE_BUILD_TOOL").getValue();
+			String cmakeGenerator = vars.getVariable("CMAKE_GENERATOR").getValue();
+	
+			return BuildCommand.canSkipCmakeStep(rule, makeCommand, cmakeGenerator);
+		}
+		return false;
+	}
 
 	/**
 	 * Get the cmake source directory, where CMakeLists.txt lives.
@@ -201,8 +209,10 @@ public class CmakeBuilder extends Task implements Params {
 			commandLine.add(v.toString());
 		}
 
-		commandLine.add("-D");
-		commandLine.add(getBuildtypeVariable().toString());
+		if (isBuildtypeSet()) {
+			commandLine.add("-D");
+			commandLine.add(getBuildtypeVariable().toString());
+		}
 		
 		commandLine.add(sourceDir.toString());
 		
@@ -225,6 +235,9 @@ public class CmakeBuilder extends Task implements Params {
 		}
 	}
 
+	private boolean isBuildtypeSet() {
+		return getBuildtype() != null;
+	}
 
 	private Variable getBuildtypeVariable() {
 		return new Variable("CMAKE_BUILD_TYPE", Variable.STRING_TYPE, getBuildtype().toString());

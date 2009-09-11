@@ -19,13 +19,26 @@ package org.iainhull.ant;
 
 import org.apache.tools.ant.BuildException;
 
+/**
+ * Static Facade for working with the CMake generated build files.
+ * 
+ * This could probably be improved by separating the static methods to  
+ * instance methods of a new class.
+ * 
+ * @author iain
+ */
 public abstract class BuildCommand {
+	
+	/**
+	 * Construct the build command line based on CMake output.
+	 * 
+	 * @param generator
+	 * @param makeCommand
+	 * @param cmakeGenerator
+	 * @return the build command line for the CMake output.
+	 */
 	public static String[] inferCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
-		BuildCommand [] commands = {
-				new VisualStudioBuildCommand(generator, makeCommand, cmakeGenerator),
-				new Vs6BuildCommand(generator, makeCommand, cmakeGenerator),
-				new MakeBuildCommand(generator, makeCommand, cmakeGenerator)
-		};
+		BuildCommand [] commands = createBuildCommands(generator, makeCommand, cmakeGenerator);
 		
 		for (BuildCommand command : commands) {
 			if (command.canBuild()) {
@@ -34,6 +47,38 @@ public abstract class BuildCommand {
 		}
 		
 		throw new BuildException("Cannot construct build command for: " + generator.getName());
+	}
+
+	/**
+	 * Test if the CMake generated build files support skipping the Cmake Step
+	 * if the build files are already generated.
+	 *    
+	 * @param generator
+	 * @param makeCommand
+	 * @param cmakeGenerator
+	 * @return true if the CMake generated build files support skipping the 
+	 * 		Cmake Step if the build files are already generated.
+	 */
+	public static boolean canSkipCmakeStep(GeneratorRule generator,
+			String makeCommand, String cmakeGenerator) {
+		BuildCommand [] commands = createBuildCommands(generator, makeCommand, cmakeGenerator);
+		
+		for (BuildCommand command : commands) {
+			if (command.canBuild()) {
+				return command.canSkipCmakeStep();
+			}
+		}
+		
+		throw new BuildException("Cannot construct build command for: " + generator.getName());
+	}
+
+	private static BuildCommand[] createBuildCommands(GeneratorRule generator,
+			String makeCommand, String cmakeGenerator) {
+		return new BuildCommand [] {
+				new VisualStudioBuildCommand(generator, makeCommand, cmakeGenerator),
+				new Vs6BuildCommand(generator, makeCommand, cmakeGenerator),
+				new MakeBuildCommand(generator, makeCommand, cmakeGenerator)
+		};
 	}
 
 	protected final GeneratorRule generator;
@@ -46,7 +91,26 @@ public abstract class BuildCommand {
 		this.cmakeGenerator = cmakeGenerator;
 	}
 
-	
+	/**
+	 * Return the command line to execute the build for this BuildCommand
+	 * @return the command line to execute the build for this BuildCommand
+	 */
 	protected abstract String[] buildCommand();
+	
+	/**
+	 * Return true if this BuildCommand can build this CMake output.
+	 * @return true if this BuildCommand can build this CMake output.
+	 */
 	protected abstract boolean canBuild();
+	
+	/**
+	 * Return true if this Build Command can skip the CMake step if the CMake
+	 * output has already been generated.  
+	 * 
+	 * <p>This is not safe for Visual Studio Builds, as the project does not 
+	 * automatically reload if CMake changes the existing project.</p>
+	 * 
+	 * @return true if this Build Command can skip the CMake step.
+	 */
+	protected abstract boolean canSkipCmakeStep();
 }

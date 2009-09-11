@@ -69,6 +69,11 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		return workspaceExtentions.containsKey(cmakeGenerator);
 	}
 	
+	@Override
+	protected boolean canSkipCmakeStep() {
+		return false;
+	}
+	
 	protected BuildType defaultBuildType(BuildType buildType) {
 		if (buildType != null) {
 			return buildType;

@@ -40,4 +40,8 @@ public class MakeBuildCommand extends BuildCommand {
 		return true;
 	}
 
+	@Override
+	protected boolean canSkipCmakeStep() {
+		return true;
+	}
 }
