@@ -26,7 +26,7 @@
 
 <h2><a name="javac">Cmake</a></h2>
 <h3>Description</h3>
-<p>Generates a <a href="http://cmake.org/">cmake</a> build, and runs the 
+<p>Generates a <a href="http://cmake.org/">cmake</a> build, and runs the
 configured build tool.</p>
 <p>This task is used to integrate cmake based projects with a larger ant
 build.</p>
@@ -40,19 +40,19 @@ build.</p>
   </tr>
   <tr>
     <td valign="top">srcdir</td>
-    <td valign="top">Location of the source directory, where the top level 
+    <td valign="top">Location of the source directory, where the top level
       <code>CMakeLists.txt</code> file is found.</td>
     <td align="center" valign="top">No, defaults to the current directory.</td>
   </tr>
   <tr>
     <td valign="top">bindir</td>
-    <td valign="top">Location to the binary directory, where the cmake output is 
+    <td valign="top">Location to the binary directory, where the cmake output is
       written, this can be the same as the srcdir.</td>
     <td align="center" valign="top">No, defaults to the current directory</td>
   </tr>
   <tr>
     <td valign="top">buildtype</td>
-    <td valign="top">The type of the build, Debug, Release, RelWithDebInfo or 
+    <td valign="top">The type of the build, Debug, Release, RelWithDebInfo or
       MinSizeRelComma.  See notes on <a href="buildtype">build type</a>.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -72,33 +72,38 @@ cmake</code>.</p>
   </tr>
   <tr>
     <td valign="top">bindir</td>
-    <td valign="top">Location to the binary directory, where the cmake output 
+    <td valign="top">Location to the binary directory, where the cmake output
       is written, this can be the same as the srcdir.</td>
     <td align="center" valign="top">No, defaults to the top level bindir</td>
   </tr>
   <tr>
     <td valign="top">buildtype</td>
-    <td valign="top">The type of the build, Debug, Release, RelWithDebInfo or 
+    <td valign="top">The type of the build, Debug, Release, RelWithDebInfo or
       MinSizeRelComma.  See notes on <a href="buildtype">build type</a>.</td>
     <td valign="top" align="center">No, defaults to the top level buildtype</td>
   </tr>
   <tr>
     <td valign="top">name</td>
-    <td valign="top">The name of the generator to use, this must be a valid cmake 
+    <td valign="top">The name of the generator to use, this must be a valid cmake
       generator.</td>
     <td align="center" valign="top">No, defaults cmake platforms default</td>
   </tr>
   <tr>
     <td valign="top">platform</td>
-    <td valign="top">The name of the platform this generator is valid for.  
+    <td valign="top">The name of the platform this generator is valid for.
       This is tested against the java property <code>os.name</code>.</td>
     <td align="center" valign="top">No, defaults to support all platforms</td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">The target of the project to build.</td>
+    <td align="center" valign="top">No, defaults to the generated all target</td>
   </tr>
 </table>
 
 <h4><code>variable</code></h4>
-<p>Set cmake variables.  This can be a child of the <code>cmake</code>then 
-it is global, or a child of the <code>generator</code> then it is specific 
+<p>Set cmake variables.  This can be a child of the <code>cmake</code>then
+it is global, or a child of the <code>generator</code> then it is specific
 to that generator.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -114,7 +119,7 @@ to that generator.</p>
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">The type of the variable. Possible values STRING, 
+    <td valign="top">The type of the variable. Possible values STRING,
       FILEPATH, PATH, BOOL.</td>
     <td valign="top" align="center">No, defaults to STRING</td>
   </tr>
@@ -123,10 +128,15 @@ to that generator.</p>
     <td valign="top">The value to set the variable.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">The target of the project to build.</td>
+    <td align="center" valign="top">No, defaults to the top level target</td>
+  </tr>
 </table>
 
 <h4><code>readvar</code></h4>
-<p>Read the value of a cmake cache variable to an ant varaiable. Child of 
+<p>Read the value of a cmake cache variable to an ant varaiable. Child of
 <code>cmake</code></p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -148,34 +158,34 @@ to that generator.</p>
 </table>
 
 <h3>Examples</h3>
-<pre>  &lt;taskdef name=&quot;cmake&quot; 
+<pre>  &lt;taskdef name=&quot;cmake&quot;
     classname=&quot;org.iainhull.ant.CmakeBuilder&quot;/&gt;
-  
+
   &lt;cmake/&gt;</pre>
-<p>Run cmake in the current directory, using it both the source directory 
+<p>Run cmake in the current directory, using it both the source directory
 and binary directory, then executes the resulting make files or projects.</p>
 
-<pre>  &lt;taskdef name=&quot;cmake&quot; 
+<pre>  &lt;taskdef name=&quot;cmake&quot;
     classname=&quot;org.iainhull.ant.CmakeBuilder&quot;/&gt;
-  
+
   &lt;cmake srcdir=&quot;${src}&quot;
     bindir=&quot;${binary}&quot;
     buildtype=&quot;${buildtype}&quot; /&gt;</pre>
-<p>Runs cmake in the ${src} directory and write the output to the ${binary} 
+<p>Runs cmake in the ${src} directory and write the output to the ${binary}
 directory, then executes the resulting make files or projects.</p>
 
-<pre>  &lt;taskdef name=&quot;cmake&quot; 
+<pre>  &lt;taskdef name=&quot;cmake&quot;
     classname=&quot;org.iainhull.ant.CmakeBuilder&quot;/&gt;
-  
+
   &lt;cmake srcdir=&quot;${src}&quot;
       bindir=&quot;${binary}&quot;
-      buildtype=&quot;${buildtype}&quot; &gt; 
+      buildtype=&quot;${buildtype}&quot; &gt;
         &lt;generator name=&quot;Visual Studio 8 2005&quot; platform="windows" /&gt;
-        &lt;generator name=&quot;Unix Makefiles&quot; /&gt;         
+        &lt;generator name=&quot;Unix Makefiles&quot; /&gt;
   &lt;/cmake&gt;</pre>
-<p>Runs cmake in the ${src} directory and write the output to the ${binary} 
+<p>Runs cmake in the ${src} directory and write the output to the ${binary}
 directory, then executes the resulting make files or projects.  On the &quot;
-windows&quot; platform the &quot;Visual Studio 8 2005&quot; on all other 
+windows&quot; platform the &quot;Visual Studio 8 2005&quot; on all other
 plaforms the default generator is used.</p>
 
 <h3><a name="buildtype" />Build Type Notes</h3>
