@@ -87,6 +87,8 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		map.put("Visual Studio 7 .NET 2003", "sln");
 		map.put("Visual Studio 8 2005", "sln");
 		map.put("Visual Studio 8 2005 Win64", "sln");
+		map.put("Visual Studio 9 2008", "sln");
+		map.put("Visual Studio 9 2008 Win64", "sln");
 	
 		return Collections.unmodifiableMap(map);
 	}
