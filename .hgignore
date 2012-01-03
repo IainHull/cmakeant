@@ -6,4 +6,5 @@ cmakeant/cmakeant.jar
 cmakeant-test/classes/*
 cmakeant-test/cmake/build/*
 cmakeant-test/cmake/binary
+cmakeant-test/report/
 *~

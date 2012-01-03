@@ -165,4 +165,29 @@ public class CmakeBuilderTest {
 
 		builder.execute();
 	}
+	
+	@Test
+	public void testExtraBuildArgs() {
+		File source = new File("source");
+		File binary = new File("binary");
+		
+		GeneratorRule g = builder.createGenerator();
+		g.setName("test generator");
+		g.setBuildargs("-j8 -k");
+		
+		builder.setAsserts(
+			new AssertExecute.Command(
+					binary, "cmake", "-G", "test generator", source.toString()),
+			new AssertExecute.Command(
+					binary, MockCmakeBuilder.BUILD_TOOL, "-j8", "-k"));
+		
+		builder.setExpectedSourceDir(source);
+		builder.setExpectedBinaryDir(binary);
+
+		builder.setSrcdir(source);
+		builder.setBindir(binary);
+		
+		builder.execute();
+		
+	}
 }

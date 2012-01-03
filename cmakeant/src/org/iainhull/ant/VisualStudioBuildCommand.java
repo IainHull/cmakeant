@@ -19,7 +19,6 @@ package org.iainhull.ant;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -45,20 +44,16 @@ public class VisualStudioBuildCommand extends BuildCommand {
 
 	
 	@Override
-	protected String[] buildCommand() {
-		String [] ret = new String[] { 
-				makeCommand, 
-				workspace(workspaceExtentions.get(cmakeGenerator)), 
-				"/Build", 
-				defaultBuildType(generator.getBuildtype()).toString()};
+	protected List<String> buildCommand() {
+		List<String> ret = new ArrayList<String>();
+		ret.add(makeCommand);
+		ret.add(workspace(workspaceExtentions.get(cmakeGenerator))); 
+		ret.add("/Build");
+		ret.add(defaultBuildType(generator.getBuildtype()).toString());
 
-		String target = generator.getTarget();
-		if (target != null) {
-			List<String> list = new ArrayList<String>();
-			list.addAll(Arrays.asList(ret));
-			list.add("/Project");
-			list.add(target);
-			return list.toArray(ret);
+		if (generator.getTarget() != null) {
+			ret.add("/Project");
+			ret.add(generator.getTarget());
 		}
 	
 		return ret;

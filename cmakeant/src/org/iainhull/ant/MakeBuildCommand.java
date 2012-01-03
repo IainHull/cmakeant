@@ -17,6 +17,9 @@
  */
 package org.iainhull.ant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MakeBuildCommand extends BuildCommand {
 
@@ -25,14 +28,14 @@ public class MakeBuildCommand extends BuildCommand {
 	}
 
 	@Override
-	protected String[] buildCommand() {
-		String target = generator.getTarget();
-		if (target == null) {
-			return new String [] { makeCommand };
+	protected List<String> buildCommand() {
+		List<String> ret = new ArrayList<String>();
+		ret.add(makeCommand);
+		ret.addAll(generator.getBuildargsAsList());
+		if (generator.getTarget() != null) {
+			ret.add(generator.getTarget());
 		}
-		else {
-			return new String [] { makeCommand, target };
-		}
+		return ret;
 	}
 
 	@Override

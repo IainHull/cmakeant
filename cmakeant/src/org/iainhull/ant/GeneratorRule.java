@@ -19,6 +19,9 @@
 package org.iainhull.ant;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +35,7 @@ public class GeneratorRule implements Params {
 	
 	private String name;
 	private String platform;
+	private String buildArgs;
 	private Params params;
 
 	/**
@@ -128,5 +132,21 @@ public class GeneratorRule implements Params {
 
 	public void setTarget(String target) {
 		params.setTarget(target);
+	}
+
+	public void setBuildargs(String buildArgs) {
+		this.buildArgs = buildArgs;
+	}
+	
+	public String getBuildargs() {
+		return buildArgs;
+	}
+
+	public List<String> getBuildargsAsList() {		
+		if (buildArgs != null) {
+			return Arrays.<String>asList(buildArgs.split("[ \t]+"));			
+		} else {
+			return Collections.emptyList();			
+		}
 	}
 }

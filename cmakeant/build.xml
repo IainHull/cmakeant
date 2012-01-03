@@ -55,13 +55,4 @@
 			</manifest>
 		</jar>
 	</target>
-
-	<target name="test" description="Test the task" depends="jar">
-		<taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${ant.project.name}.jar"/>
-		<cmake srcdir="cmake/src" bindir="cmake/binary">
-			<generator name="KDevelop3" />
-			<generator name="Unix Makefiles" platform="linux" />
-		</cmake>
-	</target>
-
 </project>

@@ -23,6 +23,7 @@
 
 	<property name="cmakeant.jar" value="../cmakeant/cmakeant.jar"/>
     <property name="ant.test.lib" value="./lib/ant-testutil.jar"/>
+    <property name="junit.jar" value="./lib/junit.jar"/>
 
 	<property name="src.dir" value="src" />
 	<property name="classes.dir" value="classes" />
@@ -40,7 +41,8 @@
         <path refid="classpath.run"/>
         <path location="${ant.project.name}.jar"/>
         <path location="${ant.test.lib}"/>
-		<path location="classes" />
+        <path location="${junit.jar}"/>
+	<path location="classes" />
    </path>
 
     <target name="clean" description="Delete all generated files">
@@ -87,7 +89,8 @@
             description="Runs unit tests and creates a report"
     />
 
-    <target name="test.basic" description="Test the task" depends="jar">
+     <!-- used by FuncTestCmakeBuilder -->
+    <target name="test.basic" depends="jar">
         <delete dir="cmake/binary" />
         <taskdef name="cmake" classname="org.iainhull.ant.CmakeBuilder" classpath="${cmakeant.jar}"/>
         <cmake srcdir="cmake/src" bindir="cmake/binary">

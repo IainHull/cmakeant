@@ -17,6 +17,8 @@
  */
 package org.iainhull.ant;
 
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -37,7 +39,7 @@ public abstract class BuildCommand {
 	 * @param cmakeGenerator
 	 * @return the build command line for the CMake output.
 	 */
-	public static String[] inferCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+	public static List<String> inferCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
 		BuildCommand [] commands = createBuildCommands(generator, makeCommand, cmakeGenerator);
 		
 		for (BuildCommand command : commands) {
@@ -95,7 +97,7 @@ public abstract class BuildCommand {
 	 * Return the command line to execute the build for this BuildCommand
 	 * @return the command line to execute the build for this BuildCommand
 	 */
-	protected abstract String[] buildCommand();
+	protected abstract List<String> buildCommand();
 	
 	/**
 	 * Return true if this BuildCommand can build this CMake output.

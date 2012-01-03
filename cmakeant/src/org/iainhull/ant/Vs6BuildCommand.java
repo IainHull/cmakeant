@@ -17,39 +17,46 @@
  */
 package org.iainhull.ant;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Vs6BuildCommand extends VisualStudioBuildCommand {
-	
-	public Vs6BuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+
+	public Vs6BuildCommand(GeneratorRule generator, String makeCommand,
+			String cmakeGenerator) {
 		this(generator, makeCommand, cmakeGenerator, new WorkSpaceLocator());
 	}
-	
-	Vs6BuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator, WorkSpaceLocator locator) {
-		super(generator, makeCommand, cmakeGenerator, locator, createWorkspaceExtentions());
+
+	Vs6BuildCommand(GeneratorRule generator, String makeCommand,
+			String cmakeGenerator, WorkSpaceLocator locator) {
+		super(generator, makeCommand, cmakeGenerator, locator,
+				createWorkspaceExtentions());
 	}
-	
+
 	@Override
-	protected String[] buildCommand() {
+	protected List<String> buildCommand() {
+		List<String> ret = new ArrayList<String>();
 		String target = generator.getTarget();
 		if (target == null) {
 			target = "ALL";
 		}
-		
-		return new String[] { 
-				makeCommand, 
-				workspace(workspaceExtentions.get(cmakeGenerator)), 
-				"/MAKE", 
-				target + " - " + defaultBuildType(generator.getBuildtype()).toString()
-				};
+
+		ret.add(makeCommand);
+		ret.add(workspace(workspaceExtentions.get(cmakeGenerator)));
+		ret.addAll(generator.getBuildargsAsList());
+		ret.add("/MAKE");
+		ret.add(target + " - "
+				+ defaultBuildType(generator.getBuildtype()).toString());
+		return ret;
 	}
 
 	private static Map<String, String> createWorkspaceExtentions() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("Visual Studio 6", "dsw");
-	
+
 		return Collections.unmodifiableMap(map);
-	}	
+	}
 }

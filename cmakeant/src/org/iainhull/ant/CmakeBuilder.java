@@ -224,7 +224,7 @@ public class CmakeBuilder extends Task implements Params {
 				log("Generator: " + rule);
 			}
 	
-			int ret = doExecute(commandLine.toArray(new String[0]), rule.getBindir());
+			int ret = doExecute(commandLine, rule.getBindir());
 			if (ret != 0) {
 				throw new BuildException(CMAKE_COMMAND
 						+ " returned error code " + ret);
@@ -326,17 +326,17 @@ public class CmakeBuilder extends Task implements Params {
 	 * @throws IOException
 	 * 		if the command results in an IOException
 	 */
-	int doExecute(String [] commandLine, File workingDirectory) throws IOException {
+	int doExecute(List<String> commandLine, File workingDirectory) throws IOException {
 		Execute exec = new Execute();
 		
 		exec.setWorkingDirectory(workingDirectory);
-		exec.setCommandline(commandLine);
+		exec.setCommandline(commandLine.toArray(new String[commandLine.size()]));
 		exec.setVMLauncher(true);
 
 		StringBuilder commandText = new StringBuilder();
-		commandText.append(commandLine[0]);
-		for (int i = 1; i < commandLine.length; ++i) {
-			commandText.append(" ").append(commandLine[i]);
+		commandText.append(commandLine.get(0));
+		for (int i = 1; i < commandLine.size(); ++i) {
+			commandText.append(" ").append(commandLine.get(i));
 		}
 		log("Executing " + commandText, Project.MSG_VERBOSE);
 		return exec.execute();

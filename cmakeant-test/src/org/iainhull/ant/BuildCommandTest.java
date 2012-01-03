@@ -18,10 +18,11 @@
 
 package org.iainhull.ant;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertArrayEquals;
-
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,33 +57,33 @@ public class BuildCommandTest {
 		
 		assertTrue(b.canBuild());
 		
-		String [] commandLine = { 
+		List<String> commandLine = Arrays.asList( 
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/Build",
-				BuildType.Release.toString() };
+				BuildType.Release.toString());
 		
-		assertArrayEquals(commandLine, b.buildCommand());
+		assertEquals(commandLine, b.buildCommand());
 
 		generator.setBuildtype(BuildType.Debug);
-		commandLine = new String [] { 
+		commandLine = Arrays.asList(
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/Build",
-				BuildType.Debug.toString() };
+				BuildType.Debug.toString());
 		
-		assertArrayEquals(commandLine, b.buildCommand());
+		assertEquals(commandLine, b.buildCommand());
 
 		generator.setTarget("SomeTarget");
-		commandLine = new String [] { 
+		commandLine = Arrays.asList(
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/Build",
 				BuildType.Debug.toString(),
 				"/Project",
-				"SomeTarget" };
+				"SomeTarget");
 		
-		assertArrayEquals(commandLine, b.buildCommand());
+		assertEquals(commandLine, b.buildCommand());
 	}
 	
 	@Test
@@ -98,21 +99,21 @@ public class BuildCommandTest {
 		
 		assertTrue(b.canBuild());
 		
-		String [] commandLine = { 
+		List<String> commandLine = Arrays.asList( 
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/MAKE",
-				"ALL - " + BuildType.Release.toString() };
+				"ALL - " + BuildType.Release.toString());
 		
-		assertArrayEquals(commandLine, b.buildCommand());
+		assertEquals(commandLine, b.buildCommand());
 
 		generator.setBuildtype(BuildType.Debug);
-		commandLine = new String [] { 
+		commandLine = Arrays.asList( 
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/MAKE",
-				"ALL - " + BuildType.Debug.toString() };
+				"ALL - " + BuildType.Debug.toString());
 		
-		assertArrayEquals(commandLine, b.buildCommand());
+		assertEquals(commandLine, b.buildCommand());
 	}
 }

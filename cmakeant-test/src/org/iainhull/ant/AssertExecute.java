@@ -22,6 +22,7 @@ import static junit.framework.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Assertion interface used by MockCmakeBuilder to test builders pass 
@@ -30,23 +31,23 @@ import java.util.Arrays;
  * @author iain.hull
  */
 public interface AssertExecute {
-	int assertCommand(String [] commandLine, File workingDirectory);
+	int assertCommand(List<String> commandLine, File workingDirectory);
 	
 	
 	public static class Command implements AssertExecute {
-		private String[] commandLine;
+		private List<String> commandLine;
 		private File workingDirectory;
 
 		Command(File workingDirectory, String ... commandLine) {
 			this.workingDirectory = workingDirectory;
-			this.commandLine = commandLine;
+			this.commandLine = Arrays.asList(commandLine);
 		}
 		
-		public int assertCommand(String [] commandLine, File workingDirectory) {
-			System.out.println(Arrays.toString(commandLine));
-			System.out.println(workingDirectory);
+		public int assertCommand(List<String> commandLine, File workingDirectory) {
+			//System.out.println(commandLine);
+			//System.out.println(workingDirectory);
 			
-			assertEquals("Test command line", Arrays.toString(this.commandLine), Arrays.toString(commandLine));
+			assertEquals("Test command line", this.commandLine, commandLine);
 			assertEquals("Test working directory", this.workingDirectory, workingDirectory);
 			
 			return 0;
@@ -54,7 +55,7 @@ public interface AssertExecute {
 	}
 
 	public class Null implements AssertExecute {
-		public int assertCommand(String [] commandLine, File workingDirectory) {
+		public int assertCommand(List<String> commandLine, File workingDirectory) {
 			return 0;
 		}
 
