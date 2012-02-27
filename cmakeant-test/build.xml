@@ -41,7 +41,7 @@
         <path refid="classpath.run"/>
         <path location="${ant.project.name}.jar"/>
         <path location="${ant.test.lib}"/>
-        <path location="${junit.jar}"/>
+        <path location="${junit-4.10.jar}"/>
 	<path location="classes" />
    </path>
 

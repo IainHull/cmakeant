@@ -36,7 +36,7 @@ import org.apache.tools.ant.types.LogLevel;
  * @author iain.hull
  */
 public class CmakeBuilder extends Task implements Params {
-	private static String CMAKE_COMMAND = "cmake";
+	static String CMAKE_COMMAND = "cmake";
 	private static String CMAKE_CACHE = "CMakeCache.txt";
 	private static File CURRENT_DIR = new File(".");
 
@@ -101,11 +101,8 @@ public class CmakeBuilder extends Task implements Params {
 
 		if (cache.exists() && cache.canRead())
 		{
-			CacheVariables vars = readCacheVariables(rule.getBindir());
-			String makeCommand = vars.getVariable("CMAKE_BUILD_TOOL").getValue();
-			String cmakeGenerator = vars.getVariable("CMAKE_GENERATOR").getValue();
-	
-			return BuildCommand.canSkipCmakeStep(rule, makeCommand, cmakeGenerator);
+			CacheVariables vars = readCacheVariables(rule.getBindir());	
+			return BuildCommand.canSkipCmakeStep(rule, vars);
 		}
 		return false;
 	}
@@ -185,8 +182,7 @@ public class CmakeBuilder extends Task implements Params {
 	}
 	
 	/** 
-	 * Create and add a new Variable, these enable CmakeBuilder to
-	 * set the ant variables based on CMakeCache.txt entries.
+	 * Create and add a new Variable, these get passed to the cmake command.
 	 */
 	public Variable createVariable() {
 		return params.createVariable();
@@ -245,16 +241,12 @@ public class CmakeBuilder extends Task implements Params {
 
 	private void executeBuild(GeneratorRule rule, CacheVariables vars) {
 		try {
-			String makeCommand = vars.getVariable("CMAKE_BUILD_TOOL").getValue();
-			String cmakeGenerator = vars.getVariable("CMAKE_GENERATOR").getValue();
-	
 			log("Building cmake output");
-			int ret = doExecute(
-					BuildCommand.inferCommand(rule, makeCommand, cmakeGenerator), 
-					rule.getBindir());
+			List<String> command = BuildCommand.inferCommand(rule, vars); 
+			int ret = doExecute(command, rule.getBindir());
 			
 			if (ret != 0) {
-				throw new BuildException(makeCommand + " returned error code "
+				throw new BuildException(command.get(0) + " returned error code "
 						+ ret);
 			}
 		} catch (IOException e) {

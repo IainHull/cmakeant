@@ -39,8 +39,8 @@ public abstract class BuildCommand {
 	 * @param cmakeGenerator
 	 * @return the build command line for the CMake output.
 	 */
-	public static List<String> inferCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
-		BuildCommand [] commands = createBuildCommands(generator, makeCommand, cmakeGenerator);
+	public static List<String> inferCommand(GeneratorRule generator, CacheVariables vars) {
+		BuildCommand [] commands = createBuildCommands(generator, vars);
 		
 		for (BuildCommand command : commands) {
 			if (command.canBuild()) {
@@ -62,8 +62,8 @@ public abstract class BuildCommand {
 	 * 		Cmake Step if the build files are already generated.
 	 */
 	public static boolean canSkipCmakeStep(GeneratorRule generator,
-			String makeCommand, String cmakeGenerator) {
-		BuildCommand [] commands = createBuildCommands(generator, makeCommand, cmakeGenerator);
+			CacheVariables vars) {
+		BuildCommand [] commands = createBuildCommands(generator, vars);
 		
 		for (BuildCommand command : commands) {
 			if (command.canBuild()) {
@@ -73,24 +73,29 @@ public abstract class BuildCommand {
 		
 		throw new BuildException("Cannot construct build command for: " + generator.getName());
 	}
-
+	
 	private static BuildCommand[] createBuildCommands(GeneratorRule generator,
-			String makeCommand, String cmakeGenerator) {
-		return new BuildCommand [] {
-				new VisualStudioBuildCommand(generator, makeCommand, cmakeGenerator),
-				new Vs6BuildCommand(generator, makeCommand, cmakeGenerator),
-				new MakeBuildCommand(generator, makeCommand, cmakeGenerator)
-		};
+			CacheVariables vars) {
+		
+		if (CMakeBuildCommand.isSupported(vars)) {
+			return new BuildCommand [] { new CMakeBuildCommand(generator, vars) };
+		} else {	
+			return new BuildCommand [] {
+					new VisualStudioBuildCommand(generator, vars),
+					new Vs6BuildCommand(generator, vars),
+					new MakeBuildCommand(generator, vars) };
+		}
 	}
 
 	protected final GeneratorRule generator;
 	protected final String makeCommand;
 	protected final String cmakeGenerator;
 
-	protected BuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
+	protected BuildCommand(GeneratorRule generator, CacheVariables vars) {
 		this.generator = generator;
-		this.makeCommand = makeCommand;
-		this.cmakeGenerator = cmakeGenerator;
+		this.makeCommand = vars.getVariable(Variable.CMAKE_BUILD_TOOL).getValue();
+		this.cmakeGenerator = vars.getVariable(Variable.CMAKE_GENERATOR).getValue();
+
 	}
 
 	/**

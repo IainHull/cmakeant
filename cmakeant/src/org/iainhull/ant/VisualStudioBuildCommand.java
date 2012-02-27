@@ -28,16 +28,16 @@ public class VisualStudioBuildCommand extends BuildCommand {
 	protected final Map<String, String> workspaceExtentions;
 	protected final WorkSpaceLocator locator;
 	
-	public VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
-		this(generator, makeCommand, cmakeGenerator, new WorkSpaceLocator(), createWorkspaceExtentions());
+	public VisualStudioBuildCommand(GeneratorRule generator, CacheVariables vars) {
+		this(generator, vars, new WorkSpaceLocator(), createWorkspaceExtentions());
 	}
 
-	VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator, WorkSpaceLocator locator) {
-		this(generator, makeCommand, cmakeGenerator, locator, createWorkspaceExtentions());
+	VisualStudioBuildCommand(GeneratorRule generator, CacheVariables vars, WorkSpaceLocator locator) {
+		this(generator, vars, locator, createWorkspaceExtentions());
 	}
 	
-	protected VisualStudioBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator, WorkSpaceLocator locator, Map<String, String> workspaceExtentions) {
-		super(generator, makeCommand, cmakeGenerator);
+	protected VisualStudioBuildCommand(GeneratorRule generator, CacheVariables vars, WorkSpaceLocator locator, Map<String, String> workspaceExtentions) {
+		super(generator, vars);
 		this.locator = locator;
 		this.workspaceExtentions = workspaceExtentions;
 	}
@@ -50,6 +50,7 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		ret.add(workspace(workspaceExtentions.get(cmakeGenerator))); 
 		ret.add("/Build");
 		ret.add(defaultBuildType(generator.getBuildtype()).toString());
+		ret.addAll(generator.getBuildargsAsList());
 
 		if (generator.getTarget() != null) {
 			ret.add("/Project");

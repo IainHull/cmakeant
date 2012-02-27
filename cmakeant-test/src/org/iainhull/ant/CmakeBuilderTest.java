@@ -100,6 +100,7 @@ public class CmakeBuilderTest {
 		GeneratorRule g = builder.createGenerator();
 		g.setName("test generator");
 		Variable v3 = builder.createVariable();
+		
 		v3.setName("One");
 		v3.setValue("TheGeneratorOne");
 		
@@ -120,6 +121,7 @@ public class CmakeBuilderTest {
 	}
 	
 	@Test
+	
 	public void testGeneratorBindir() {
 		File source = new File("source");
 		File binary = new File("binary");
@@ -190,4 +192,34 @@ public class CmakeBuilderTest {
 		builder.execute();
 		
 	}
+	
+	@Test
+	public void testCMakeBuildCommand() {
+		File source = new File("source");
+		File binary = new File("binary");
+		
+		builder.addCacheVariables(
+				new Variable(Variable.CMAKE_MAJOR_VERSION, Variable.STRING_TYPE, "2"), 
+				new Variable(Variable.CMAKE_MINOR_VERSION, Variable.STRING_TYPE, "8"));
+
+		GeneratorRule g = builder.createGenerator();
+		g.setName("test generator");
+		g.setBuildargs("-j8 -k");
+		
+		builder.setAsserts(
+			new AssertExecute.Command(
+					binary, "cmake", "-G", "test generator", source.toString()),
+			new AssertExecute.Command(
+					binary, "cmake", "--build", binary.toString(), "--", "-j8", "-k"));
+		
+		builder.setExpectedSourceDir(source);
+		builder.setExpectedBinaryDir(binary);
+
+		builder.setSrcdir(source);
+		builder.setBindir(binary);
+		
+		builder.execute();
+		
+	}
+
 }

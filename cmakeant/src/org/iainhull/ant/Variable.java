@@ -33,6 +33,11 @@ public class Variable {
 	public static final String STATIC_TYPE = "STATIC";
 	public static final String INTERNAL_TYPE = "INTERNAL";
 	
+	public static final String CMAKE_BUILD_TOOL = "CMAKE_BUILD_TOOL";
+	public static final String CMAKE_GENERATOR = "CMAKE_GENERATOR";
+	public static final String CMAKE_MAJOR_VERSION = "CMAKE_MAJOR_VERSION";
+	public static final String CMAKE_MINOR_VERSION = "CMAKE_MINOR_VERSION";
+	
 	private String name;
 	private String type = STRING_TYPE;
 	private String value;
@@ -64,6 +69,17 @@ public class Variable {
 
 	public String getValue() {
 		return value;
+	}
+
+	/**
+	 * Returns the variable value as an integer.
+	 * 
+	 * @return the variable value as an integer.
+	 * 
+	 * @throws NumberFormatException if the value is not a valid integer.
+	 */
+	public int getIntValue() {
+		return Integer.parseInt(value);
 	}
 
 	public void setValue(String value) {

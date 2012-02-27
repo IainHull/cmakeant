@@ -23,8 +23,8 @@ import java.util.List;
 
 public class MakeBuildCommand extends BuildCommand {
 
-	public MakeBuildCommand(GeneratorRule generator, String makeCommand, String cmakeGenerator) {
-		super(generator, makeCommand, cmakeGenerator);
+	public MakeBuildCommand(GeneratorRule generator, CacheVariables vars) {
+		super(generator, vars);
 	}
 
 	@Override

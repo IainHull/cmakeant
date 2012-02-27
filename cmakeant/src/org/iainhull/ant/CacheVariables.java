@@ -55,6 +55,18 @@ public class CacheVariables {
 	public Variable getVariable(String name) {
 		return vars.get(name);
 	}
+	
+	public int getIntValue(String name, int defValue) {
+		try {
+			if (vars.containsKey(name)) {
+				return vars.get(name).getIntValue();
+			} else {
+				return defValue;
+			}
+		} catch(NumberFormatException e) {
+			return defValue;
+		}
+	}
 
 	private void addVariable(String line) {
 		int colonPos = line.indexOf(COLON);

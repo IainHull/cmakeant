@@ -31,12 +31,18 @@ public class BuildCommandTest {
 
 	private CmakeBuilder builder;
 	private GeneratorRule generator;
+	private CacheVariables vars;
 
+	private final String expectedWorkspace = "testworkspace";
+	private final String expectedBuildpath = "buildpath";
 
 	@Before  
 	public void setUp() throws Exception {
 		builder = new CmakeBuilder();
 		generator = new GeneratorRule(builder);
+		
+		vars = new CacheVariables();
+		vars.addVariable(new Variable(Variable.CMAKE_BUILD_TOOL, Variable.STRING_TYPE, expectedBuildpath));
 	}
 
 	@Test
@@ -46,13 +52,11 @@ public class BuildCommandTest {
 		map.put("Visual Studio 8 2005", "sln");
 		map.put("Visual Studio 8 2005 Win64", "sln");
 */		
-		String expectedWorkspace = "testworkspace";
-		String expectedBuildpath = "buildpath";
+		vars.addVariable(new Variable(Variable.CMAKE_GENERATOR, Variable.STRING_TYPE, "Visual Studio 8 2005"));
 		
 		BuildCommand b = new VisualStudioBuildCommand(
 				generator, 
-				expectedBuildpath, 
-				"Visual Studio 8 2005", 
+				vars, 
 				new FakeWorkSpaceLocator(expectedWorkspace) );
 		
 		assertTrue(b.canBuild());
@@ -88,13 +92,11 @@ public class BuildCommandTest {
 	
 	@Test
 	public void testVs6BuildCommand() {
-		String expectedWorkspace = "testworkspace";
-		String expectedBuildpath = "buildpath";
-		
+		vars.addVariable(new Variable(Variable.CMAKE_GENERATOR, Variable.STRING_TYPE, "Visual Studio 6"));
+
 		BuildCommand b = new Vs6BuildCommand(
 				generator, 
-				expectedBuildpath, 
-				"Visual Studio 6", 
+				vars, 
 				new FakeWorkSpaceLocator(expectedWorkspace) );
 		
 		assertTrue(b.canBuild());

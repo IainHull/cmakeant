@@ -25,14 +25,12 @@ import java.util.Map;
 
 public class Vs6BuildCommand extends VisualStudioBuildCommand {
 
-	public Vs6BuildCommand(GeneratorRule generator, String makeCommand,
-			String cmakeGenerator) {
-		this(generator, makeCommand, cmakeGenerator, new WorkSpaceLocator());
+	public Vs6BuildCommand(GeneratorRule generator, CacheVariables vars) {
+		this(generator, vars, new WorkSpaceLocator());
 	}
 
-	Vs6BuildCommand(GeneratorRule generator, String makeCommand,
-			String cmakeGenerator, WorkSpaceLocator locator) {
-		super(generator, makeCommand, cmakeGenerator, locator,
+	Vs6BuildCommand(GeneratorRule generator, CacheVariables vars, WorkSpaceLocator locator) {
+		super(generator, vars, locator,
 				createWorkspaceExtentions());
 	}
 
@@ -46,10 +44,10 @@ public class Vs6BuildCommand extends VisualStudioBuildCommand {
 
 		ret.add(makeCommand);
 		ret.add(workspace(workspaceExtentions.get(cmakeGenerator)));
-		ret.addAll(generator.getBuildargsAsList());
 		ret.add("/MAKE");
 		ret.add(target + " - "
 				+ defaultBuildType(generator.getBuildtype()).toString());
+		ret.addAll(generator.getBuildargsAsList());
 		return ret;
 	}
 
