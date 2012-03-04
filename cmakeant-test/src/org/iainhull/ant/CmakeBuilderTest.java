@@ -129,7 +129,7 @@ public class CmakeBuilderTest {
 		
 		GeneratorRule g = builder.createGenerator();
 		g.setName("test generator");
-		g.setBuildtype(BuildType.Debug);
+		g.setBuildtype(BuildType.DEBUG);
 		g.setBindir(debug);
 		
 		builder.setAsserts(
@@ -241,7 +241,7 @@ public class CmakeBuilderTest {
 				new Variable(Variable.CMAKE_MINOR_VERSION, Variable.STRING_TYPE, "8"));
 
 		builder.setTarget("SomeTarget");
-		builder.setBuildtype(BuildType.RelWithDebInfo);
+		builder.setBuildtype(BuildType.REL_WITH_DEB_INFO);
 		GeneratorRule g = builder.createGenerator();
 		g.setName("test generator");
 		g.setBuildargs("-j8 -k");
@@ -249,12 +249,12 @@ public class CmakeBuilderTest {
 		builder.setAsserts(
 			new AssertExecute.Command(
 					binary, "cmake", "-G", "test generator","-D", 
-					Variable.CMAKE_BUILD_TYPE + ":STRING=" + BuildType.RelWithDebInfo, 
+					Variable.CMAKE_BUILD_TYPE + ":STRING=" + BuildType.REL_WITH_DEB_INFO, 
 					source.toString()),
 			new AssertExecute.Command(
 					binary, "cmake", "--build", binary.toString(), 
 					"--target", "SomeTarget", 
-					"--config", BuildType.RelWithDebInfo.toString(),
+					"--config", BuildType.REL_WITH_DEB_INFO,
 					"--", "-j8", "-k"));
 		
 		builder.setExpectedSourceDir(source);

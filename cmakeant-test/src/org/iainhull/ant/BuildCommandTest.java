@@ -65,16 +65,16 @@ public class BuildCommandTest {
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/Build",
-				BuildType.Release.toString());
+				BuildType.RELEASE);
 		
 		assertEquals(commandLine, b.buildCommand());
 
-		generator.setBuildtype(BuildType.Debug);
+		generator.setBuildtype(BuildType.DEBUG);
 		commandLine = Arrays.asList(
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/Build",
-				BuildType.Debug.toString());
+				BuildType.DEBUG);
 		
 		assertEquals(commandLine, b.buildCommand());
 
@@ -83,7 +83,7 @@ public class BuildCommandTest {
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/Build",
-				BuildType.Debug.toString(),
+				BuildType.DEBUG,
 				"/Project",
 				"SomeTarget");
 		
@@ -105,16 +105,16 @@ public class BuildCommandTest {
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/MAKE",
-				"ALL - " + BuildType.Release.toString());
+				"ALL - " + BuildType.RELEASE);
 		
 		assertEquals(commandLine, b.buildCommand());
 
-		generator.setBuildtype(BuildType.Debug);
+		generator.setBuildtype(BuildType.DEBUG);
 		commandLine = Arrays.asList( 
 				expectedBuildpath, 
 				new File(generator.getBindir(), expectedWorkspace).toString(),
 				"/MAKE",
-				"ALL - " + BuildType.Debug.toString());
+				"ALL - " + BuildType.DEBUG);
 		
 		assertEquals(commandLine, b.buildCommand());
 	}

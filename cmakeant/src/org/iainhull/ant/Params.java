@@ -44,8 +44,18 @@ public interface Params {
 	 */
 	public void setBindir(File binaryDir);
 	
-	public BuildType getBuildtype();
-	public void setBuildtype(BuildType buildType);
+	/**
+	 * Returns the value for the <tt>CMAKE_BUILD_TYPE</tt> variable or null if unset. 
+	 * @return  the value for the <tt>CMAKE_BUILD_TYPE</tt> variable or null if unset. 
+	 */
+	public String getBuildtype();
+	
+	/**
+	 * Set the value for the <tt>CMAKE_BUILD_TYPE</tt> variable or null to unset.
+	 * 
+	 * @param buildType this is usually Debug, Release, RelWithDebInfo, MinSizeRel.
+	 */
+	public void setBuildtype(String buildType);
 	
 	public String getTarget();
 	public void setTarget(String target);

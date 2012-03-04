@@ -42,8 +42,8 @@ public class CompositeParams implements Params {
 		return ret;
 	}
 
-	public BuildType getBuildtype() {
-		BuildType ret = second.getBuildtype();
+	public String getBuildtype() {
+		String ret = second.getBuildtype();
 		if (ret == null) {
 			ret = first.getBuildtype();
 		}
@@ -62,7 +62,7 @@ public class CompositeParams implements Params {
 		second.setBindir(binaryDir);
 	}
 
-	public void setBuildtype(BuildType buildType) {
+	public void setBuildtype(String buildType) {
 		second.setBuildtype(buildType);
 	}
 

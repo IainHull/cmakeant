@@ -157,11 +157,11 @@ public class CmakeBuilder extends Task implements Params {
 		this.params.setBindir(binaryDir);
 	}
 
-	public BuildType getBuildtype() {
+	public String getBuildtype() {
 		return this.params.getBuildtype();
 	}
 
-	public void setBuildtype(BuildType buildType) {
+	public void setBuildtype(String buildType) {
 		this.params.setBuildtype(buildType);
 	}	
 	

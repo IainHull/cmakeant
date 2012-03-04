@@ -106,7 +106,7 @@ public class GeneratorRule implements Params {
 		return params.getBindir();
 	}
 
-	public BuildType getBuildtype() {
+	public String getBuildtype() {
 		return params.getBuildtype();
 	}
 
@@ -114,7 +114,7 @@ public class GeneratorRule implements Params {
 		this.params.setBindir(binaryDir);
 	}
 
-	public void setBuildtype(BuildType buildType) {
+	public void setBuildtype(String buildType) {
 		this.params.setBuildtype(buildType);
 	}
 

@@ -49,7 +49,7 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		ret.add(makeCommand);
 		ret.add(workspace(workspaceExtentions.get(cmakeGenerator))); 
 		ret.add("/Build");
-		ret.add(defaultBuildType(generator.getBuildtype()).toString());
+		ret.add(defaultBuildType(generator.getBuildtype()));
 		ret.addAll(generator.getBuildargsAsList());
 
 		if (generator.getTarget() != null) {
@@ -70,11 +70,11 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		return false;
 	}
 	
-	protected BuildType defaultBuildType(BuildType buildType) {
+	protected String defaultBuildType(String buildType) {
 		if (buildType != null) {
 			return buildType;
 		}
-		return BuildType.Release;
+		return "Release";
 	}
 	
 	private static Map<String, String> createWorkspaceExtentions() {

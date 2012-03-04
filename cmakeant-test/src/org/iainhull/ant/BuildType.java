@@ -17,9 +17,9 @@
  */
 package org.iainhull.ant;
 
-public enum BuildType {
-	Debug, 
-	Release, 
-	RelWithDebInfo, 
-	MinSizeRel
+public class BuildType {
+	public static String DEBUG = "Debug";
+	public static String RELEASE = "Release";
+	public static String REL_WITH_DEB_INFO = "RelWithDebInfo";
+	public static String MIN_SIZE_REL = "MinSizeRel";
 }

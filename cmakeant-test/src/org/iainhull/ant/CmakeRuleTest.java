@@ -52,10 +52,10 @@ public class CmakeRuleTest {
 		second.setBindir(two);
 		assertEquals(two, composite.getBindir());
 		
-		first.setBuildtype(BuildType.Debug);
-		assertEquals(BuildType.Debug, composite.getBuildtype());
-		second.setBuildtype(BuildType.Release);
-		assertEquals(BuildType.Release, composite.getBuildtype());	
+		first.setBuildtype(BuildType.DEBUG);
+		assertEquals(BuildType.DEBUG, composite.getBuildtype());
+		second.setBuildtype(BuildType.RELEASE);
+		assertEquals(BuildType.RELEASE, composite.getBuildtype());	
 	}
 
 	@Test
