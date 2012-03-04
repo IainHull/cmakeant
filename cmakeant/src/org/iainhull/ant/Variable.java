@@ -37,6 +37,7 @@ public class Variable {
 	public static final String CMAKE_GENERATOR = "CMAKE_GENERATOR";
 	public static final String CMAKE_MAJOR_VERSION = "CMAKE_MAJOR_VERSION";
 	public static final String CMAKE_MINOR_VERSION = "CMAKE_MINOR_VERSION";
+	public static final String CMAKE_BUILD_TYPE = "CMAKE_BUILD_TYPE";
 	
 	private String name;
 	private String type = STRING_TYPE;

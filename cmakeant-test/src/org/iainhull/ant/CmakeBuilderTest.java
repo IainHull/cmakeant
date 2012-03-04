@@ -221,5 +221,50 @@ public class CmakeBuilderTest {
 		builder.execute();
 		
 	}
+	
+	/*
+	 * --build
+	 * --target
+	 * --config
+	 * --clean-first
+	 * --use-stderr
+	 * --
+	 */
+	
+	@Test
+	public void testCMakeBuildCommandWithTargetAndConfig() {
+		File source = new File("source");
+		File binary = new File("binary");
+		
+		builder.addCacheVariables(
+				new Variable(Variable.CMAKE_MAJOR_VERSION, Variable.STRING_TYPE, "2"), 
+				new Variable(Variable.CMAKE_MINOR_VERSION, Variable.STRING_TYPE, "8"));
+
+		builder.setTarget("SomeTarget");
+		builder.setBuildtype(BuildType.RelWithDebInfo);
+		GeneratorRule g = builder.createGenerator();
+		g.setName("test generator");
+		g.setBuildargs("-j8 -k");
+		
+		builder.setAsserts(
+			new AssertExecute.Command(
+					binary, "cmake", "-G", "test generator","-D", 
+					Variable.CMAKE_BUILD_TYPE + ":STRING=" + BuildType.RelWithDebInfo, 
+					source.toString()),
+			new AssertExecute.Command(
+					binary, "cmake", "--build", binary.toString(), 
+					"--target", "SomeTarget", 
+					"--config", BuildType.RelWithDebInfo.toString(),
+					"--", "-j8", "-k"));
+		
+		builder.setExpectedSourceDir(source);
+		builder.setExpectedBinaryDir(binary);
+
+		builder.setSrcdir(source);
+		builder.setBindir(binary);
+		
+		builder.execute();
+		
+	}
 
 }

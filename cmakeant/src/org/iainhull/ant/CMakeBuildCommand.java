@@ -24,6 +24,16 @@ public class CMakeBuildCommand extends BuildCommand {
 		ret.add("--build");
 		ret.add(generator.getBindir().toString());
 		
+		if (generator.getTarget() != null) {
+			ret.add("--target");
+			ret.add(generator.getTarget());
+		}
+		
+		if (generator.getBuildtype() != null) {
+			ret.add("--config");
+			ret.add(generator.getBuildtype().toString());
+		}
+		
 		List<String> buildArgs = generator.getBuildargsAsList();
 		if (!buildArgs.isEmpty()) {
 			ret.add("--");
