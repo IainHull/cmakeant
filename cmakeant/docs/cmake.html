@@ -52,9 +52,25 @@ build.</p>
   </tr>
   <tr>
     <td valign="top">buildtype</td>
-    <td valign="top">The type of the build, Debug, Release, RelWithDebInfo or
-      MinSizeRelComma.  See notes on <a href="buildtype">build type</a>.</td>
+    <td valign="top">The type of the build, (usually one of Debug, Release, 
+      RelWithDebInfo or MinSizeRelComma).  See notes on 
+      <a href="buildtype">build type</a>.</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">cleanfirst</td>
+    <td valign="top">Call the clean target first when building.</td>
+    <td valign="top" align="center">No, defaults to false</td>
+  </tr>
+  <tr>
+    <td valign="top">cmakeonly</td>
+    <td valign="top">When set to true, runs cmake but does not execute the build.</td>
+    <td align="center" valign="top">No, defaults to false</td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">The target of the project to build.</td>
+    <td align="center" valign="top">No, defaults to the generated all target</td>
   </tr>
 </table>
 
@@ -78,9 +94,15 @@ cmake</code>.</p>
   </tr>
   <tr>
     <td valign="top">buildtype</td>
-    <td valign="top">The type of the build, Debug, Release, RelWithDebInfo or
-      MinSizeRelComma.  See notes on <a href="buildtype">build type</a>.</td>
+    <td valign="top">The type of the build, (usually one of Debug, Release, 
+      RelWithDebInfo or MinSizeRelComma).  See notes on 
+      <a href="buildtype">build type</a>.</td>
     <td valign="top" align="center">No, defaults to the top level buildtype</td>
+  </tr>
+  <tr>
+    <td valign="top">cleanfirst</td>
+    <td valign="top">Call the clean target first when building.</td>
+    <td valign="top" align="center">No, defaults to the top level cleanfirst</td>
   </tr>
   <tr>
     <td valign="top">name</td>
@@ -190,6 +212,9 @@ plaforms the default generator is used.</p>
 
 <h3><a name="buildtype" />Build Type Notes</h3>
 
-<p>Build type.</p>
+<p>The buildtype attribute of the cmake and generator tags is used to set the
+cmake variable CMAKE_BUILD_TYPE.  This is usually one of Debug, Release, 
+RelWithDebInfo or MinSizeRelComma see the Cmake documentation for
+the CMAKE_BUILD_TYPE and CMAKE_CONFIGURATION_TYPES for more information.</p>
 </body>
 </html>

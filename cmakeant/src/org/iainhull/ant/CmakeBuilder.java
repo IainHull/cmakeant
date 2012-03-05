@@ -173,6 +173,18 @@ public class CmakeBuilder extends Task implements Params {
 		params.setTarget(target);
 	}
 	
+	public boolean isCleanfirst() {
+		return this.params.isCleanfirst();
+	}
+	
+	public void setCleanfirst(boolean cleanfirst) {
+		this.params.setCleanfirst(cleanfirst);
+	}
+	
+	public boolean isCleanfirstSet() {
+		return this.params.isCleanfirstSet();
+	}
+	
 	public boolean getCmakeonly() {
 		return this.cmakeonly;
 	}

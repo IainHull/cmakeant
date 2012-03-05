@@ -66,6 +66,22 @@ public class CompositeParams implements Params {
 		second.setBuildtype(buildType);
 	}
 
+	public boolean isCleanfirst() {
+		if (second.isCleanfirstSet()) {
+			return second.isCleanfirst();
+		} else {
+			return first.isCleanfirst();
+		}
+	}
+	
+	public void setCleanfirst(boolean cleanfirst) {
+		second.setCleanfirst(cleanfirst);
+	}
+	
+	public boolean isCleanfirstSet() {
+		return second.isCleanfirstSet() || first.isCleanfirstSet();
+	}
+
 	public Variable createVariable() {
 		return second.createVariable();
 	}

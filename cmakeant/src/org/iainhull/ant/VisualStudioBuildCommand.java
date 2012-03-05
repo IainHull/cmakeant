@@ -48,15 +48,22 @@ public class VisualStudioBuildCommand extends BuildCommand {
 		List<String> ret = new ArrayList<String>();
 		ret.add(makeCommand);
 		ret.add(workspace(workspaceExtentions.get(cmakeGenerator))); 
-		ret.add("/Build");
+		
+		if (generator.isCleanfirst()) {
+			ret.add("/Rebuild");
+		} else {
+			ret.add("/Build");
+		}
+		
 		ret.add(defaultBuildType(generator.getBuildtype()));
-		ret.addAll(generator.getBuildargsAsList());
-
+		
+		
 		if (generator.getTarget() != null) {
 			ret.add("/Project");
 			ret.add(generator.getTarget());
 		}
-	
+		
+		ret.addAll(generator.getBuildargsAsList());
 		return ret;
 	}
 

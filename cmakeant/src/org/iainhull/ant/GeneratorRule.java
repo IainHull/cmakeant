@@ -117,6 +117,18 @@ public class GeneratorRule implements Params {
 	public void setBuildtype(String buildType) {
 		this.params.setBuildtype(buildType);
 	}
+	
+	public boolean isCleanfirst() {
+		return this.params.isCleanfirst();
+	}
+	
+	public void setCleanfirst(boolean cleanfirst) {
+		this.params.setCleanfirst(cleanfirst);
+	}
+
+	public boolean isCleanfirstSet() {
+		return this.params.isCleanfirstSet();
+	}
 
 	public Variable createVariable() {
 		return params.createVariable();

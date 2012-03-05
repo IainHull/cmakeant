@@ -28,6 +28,8 @@ public class SimpleParams implements Params {
 	private File binaryDir;
 	private String buildType;
 	private String target;
+	private boolean cleanfirst = false;
+	private boolean cleanfirstSet = false;
 	private List<Variable> vars = new ArrayList<Variable>();
 	
 	public File getBindir() {
@@ -54,6 +56,19 @@ public class SimpleParams implements Params {
 		this.target = target;
 	}
 		
+	public boolean isCleanfirst() {
+		return cleanfirst;
+	}
+	
+	public void setCleanfirst(boolean cleanfirst) {
+		this.cleanfirst = cleanfirst;
+		this.cleanfirstSet = true;
+	}
+	
+	public boolean isCleanfirstSet() {
+		return this.cleanfirstSet;
+	}
+
 	public Variable createVariable() {
 		Variable v = new Variable();
 		vars.add(v);

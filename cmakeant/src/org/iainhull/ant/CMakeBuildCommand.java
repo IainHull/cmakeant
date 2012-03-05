@@ -34,6 +34,10 @@ public class CMakeBuildCommand extends BuildCommand {
 			ret.add(generator.getBuildtype().toString());
 		}
 		
+		if (generator.isCleanfirst()) {
+			ret.add("--clean-first");
+		}
+		
 		List<String> buildArgs = generator.getBuildargsAsList();
 		if (!buildArgs.isEmpty()) {
 			ret.add("--");

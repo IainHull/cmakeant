@@ -60,6 +60,9 @@ public interface Params {
 	public String getTarget();
 	public void setTarget(String target);
 	
+	public boolean isCleanfirst();
+	public void setCleanfirst(boolean cleanfirst);
+	public boolean isCleanfirstSet();
 	
 	public Variable createVariable();
 	public Map<String, Variable> getVariables();

@@ -48,6 +48,7 @@ public class Vs6BuildCommand extends VisualStudioBuildCommand {
 		ret.add(target + " - "
 				+ defaultBuildType(generator.getBuildtype()).toString());
 		ret.addAll(generator.getBuildargsAsList());
+		
 		return ret;
 	}
 

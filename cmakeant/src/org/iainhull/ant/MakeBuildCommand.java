@@ -32,8 +32,15 @@ public class MakeBuildCommand extends BuildCommand {
 		List<String> ret = new ArrayList<String>();
 		ret.add(makeCommand);
 		ret.addAll(generator.getBuildargsAsList());
+		
+		if (generator.isCleanfirst()) {
+			ret.add("clean");
+		}
+
 		if (generator.getTarget() != null) {
 			ret.add(generator.getTarget());
+		} else if (generator.isCleanfirst()) {
+			ret.add("all");
 		}
 		return ret;
 	}

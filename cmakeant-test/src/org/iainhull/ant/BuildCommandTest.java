@@ -88,6 +88,17 @@ public class BuildCommandTest {
 				"SomeTarget");
 		
 		assertEquals(commandLine, b.buildCommand());
+
+		generator.setCleanfirst(true);
+		commandLine = Arrays.asList(
+				expectedBuildpath, 
+				new File(generator.getBindir(), expectedWorkspace).toString(),
+				"/Rebuild",
+				BuildType.DEBUG,
+				"/Project",
+				"SomeTarget");
+		
+		assertEquals(commandLine, b.buildCommand());
 	}
 	
 	@Test
