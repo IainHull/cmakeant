@@ -30,15 +30,21 @@ public class FuncTestCmakeBuilder extends BuildFileTest {
 		super.setUp();
 		// initialize Ant
 		configureProject("build.xml");
+		
 	}
 
 	public void testBasic() {
 		executeTarget("test.basic");
-		System.out.println(getLog());
 		assertLogContaining("Calling CMake");
 		assertLogContaining("Source Directory:");
 		assertLogContaining("Binary Directory:");
 		assertLogContaining("Generator:");
 		assertLogContaining("Building");
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		System.out.println(getLog());
 	}
 }
