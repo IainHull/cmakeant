@@ -33,7 +33,7 @@ public class Variable {
 	public static final String STATIC_TYPE = "STATIC";
 	public static final String INTERNAL_TYPE = "INTERNAL";
 	
-	public static final String CMAKE_BUILD_TOOL = "CMAKE_BUILD_TOOL";
+	public static final String CMAKE_MAKE_PROGRAM = "CMAKE_MAKE_PROGRAM";
 	public static final String CMAKE_GENERATOR = "CMAKE_GENERATOR";
 	public static final String CMAKE_MAJOR_VERSION = "CMAKE_MAJOR_VERSION";
 	public static final String CMAKE_MINOR_VERSION = "CMAKE_MINOR_VERSION";

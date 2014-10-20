@@ -93,7 +93,7 @@ public abstract class BuildCommand {
 
 	protected BuildCommand(GeneratorRule generator, CacheVariables vars) {
 		this.generator = generator;
-		this.makeCommand = vars.getVariable(Variable.CMAKE_BUILD_TOOL).getValue();
+		this.makeCommand = vars.getVariable(Variable.CMAKE_MAKE_PROGRAM).getValue();
 		this.cmakeGenerator = vars.getVariable(Variable.CMAKE_GENERATOR).getValue();
 
 	}
