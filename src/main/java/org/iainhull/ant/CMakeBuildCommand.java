@@ -66,8 +66,18 @@ public class CMakeBuildCommand extends BuildCommand {
 	 */
 	public static boolean isSupported(CacheVariables vars) {
 		try {
-			int major = vars.getIntValue(Variable.CMAKE_MAJOR_VERSION, 0);
-			int minor = vars.getIntValue(Variable.CMAKE_MINOR_VERSION, 0);
+			int major = 0;
+			int minor = 0;
+
+			if (vars.hasVariable(Variable.CMAKE_MAJOR_VERSION) 
+					&& vars.hasVariable(Variable.CMAKE_MINOR_VERSION)) {
+				major = vars.getIntValue(Variable.CMAKE_MAJOR_VERSION, 0);
+				minor = vars.getIntValue(Variable.CMAKE_MINOR_VERSION, 0);
+			} else if (vars.hasVariable(Variable.CMAKE_CACHE_MAJOR_VERSION) 
+					&& vars.hasVariable(Variable.CMAKE_CACHE_MINOR_VERSION)) {
+				major = vars.getIntValue(Variable.CMAKE_CACHE_MAJOR_VERSION, 0);
+				minor = vars.getIntValue(Variable.CMAKE_CACHE_MINOR_VERSION, 0);
+			}
 
 			return major > 2 || (major == 2 && minor >= 8);
 		} catch (NumberFormatException e) {

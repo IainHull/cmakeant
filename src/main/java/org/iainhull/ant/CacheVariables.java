@@ -52,13 +52,17 @@ public class CacheVariables {
 		}
 	}
 	
+	public boolean hasVariable(String name) {
+		return vars.containsKey(name);
+	}
+
 	public Variable getVariable(String name) {
 		return vars.get(name);
 	}
 	
 	public int getIntValue(String name, int defValue) {
 		try {
-			if (vars.containsKey(name)) {
+			if (hasVariable(name)) {
 				return vars.get(name).getIntValue();
 			} else {
 				return defValue;
@@ -77,7 +81,6 @@ public class CacheVariables {
 			String type = line.substring(colonPos + 1, equalPos);
 			String value = line.substring(equalPos + 1);
 			
-			// System.out.println(name);
 			addVariable(new Variable(name, type, value));
 		}
 	}

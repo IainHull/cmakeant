@@ -42,7 +42,59 @@ public class BuildCommandTest {
 		generator = new GeneratorRule(builder);
 		
 		vars = new CacheVariables();
+		vars.addVariable(new Variable(Variable.CMAKE_MAKE_PROGRAM, Variable.STRING_TYPE, expectedBuildpath));
+	}
+
+	@Test
+	public void testCMakeBuildCommand() {
+		vars.addVariable(new Variable(Variable.CMAKE_GENERATOR, Variable.STRING_TYPE, "Unix Makefiles"));
+
+		BuildCommand b = new CMakeBuildCommand(
+				generator, 
+				vars );
+
+		assertTrue(b.canBuild());
+		
+		List<String> commandLine = Arrays.asList( 
+				"cmake",
+				"--build", 
+				"." );
+		
+		assertEquals(commandLine, b.buildCommand());
+	}
+
+	@Test
+	public void testMakeBuildCommandOld() {
+		vars = new CacheVariables();
 		vars.addVariable(new Variable(Variable.CMAKE_BUILD_TOOL, Variable.STRING_TYPE, expectedBuildpath));
+		vars.addVariable(new Variable(Variable.CMAKE_GENERATOR, Variable.STRING_TYPE, "Unix Makefiles"));
+
+		BuildCommand b = new MakeBuildCommand(
+				generator, 
+				vars );
+
+		assertTrue(b.canBuild());
+		
+		List<String> commandLine = Arrays.asList( 
+				expectedBuildpath );
+		
+		assertEquals(commandLine, b.buildCommand());
+	}
+
+	@Test
+	public void testMakeBuildCommandNew() {
+		vars.addVariable(new Variable(Variable.CMAKE_GENERATOR, Variable.STRING_TYPE, "Unix Makefiles"));
+
+		BuildCommand b = new MakeBuildCommand(
+				generator, 
+				vars );
+
+		assertTrue(b.canBuild());
+		
+		List<String> commandLine = Arrays.asList( 
+				expectedBuildpath );
+		
+		assertEquals(commandLine, b.buildCommand());
 	}
 
 	@Test

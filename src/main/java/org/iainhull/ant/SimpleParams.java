@@ -20,9 +20,9 @@ package org.iainhull.ant;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class SimpleParams implements Params {
 	private File binaryDir;
@@ -76,7 +76,7 @@ public class SimpleParams implements Params {
 	}	
 	
 	public Map<String, Variable> getVariables() {
-		Map<String, Variable> ret = new HashMap<String, Variable>();
+		Map<String, Variable> ret = new TreeMap<String, Variable>();
 		for(Variable v : vars) {
 			ret.put(v.getName(), v);
 		}

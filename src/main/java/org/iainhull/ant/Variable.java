@@ -25,91 +25,94 @@ package org.iainhull.ant;
  * @author iain.hull
  */
 public class Variable {
-	
-	public static final String STRING_TYPE = "STRING";
-	public static final String FILEPATH_TYPE = "FILEPATH";
-	public static final String PATH_TYPE = "PATH";
-	public static final String BOOL_TYPE = "BOOL";
-	public static final String STATIC_TYPE = "STATIC";
-	public static final String INTERNAL_TYPE = "INTERNAL";
-	
-	public static final String CMAKE_MAKE_PROGRAM = "CMAKE_MAKE_PROGRAM";
-	public static final String CMAKE_GENERATOR = "CMAKE_GENERATOR";
-	public static final String CMAKE_MAJOR_VERSION = "CMAKE_MAJOR_VERSION";
-	public static final String CMAKE_MINOR_VERSION = "CMAKE_MINOR_VERSION";
-	public static final String CMAKE_BUILD_TYPE = "CMAKE_BUILD_TYPE";
-	
-	private String name;
-	private String type = STRING_TYPE;
-	private String value;
-	
-	public Variable() {
-	}
-	
-	public Variable(String name, String type, String value) {
-		this.name = name;
-		this.type = type;
-		this.value = value;
-	}
+    
+    public static final String STRING_TYPE = "STRING";
+    public static final String FILEPATH_TYPE = "FILEPATH";
+    public static final String PATH_TYPE = "PATH";
+    public static final String BOOL_TYPE = "BOOL";
+    public static final String STATIC_TYPE = "STATIC";
+    public static final String INTERNAL_TYPE = "INTERNAL";
+    
+    public static final String CMAKE_BUILD_TOOL = "CMAKE_BUILD_TOOL";
+    public static final String CMAKE_MAKE_PROGRAM = "CMAKE_MAKE_PROGRAM";
+    public static final String CMAKE_GENERATOR = "CMAKE_GENERATOR";
+    public static final String CMAKE_MAJOR_VERSION = "CMAKE_MAJOR_VERSION";
+    public static final String CMAKE_MINOR_VERSION = "CMAKE_MINOR_VERSION";
+    public static final String CMAKE_CACHE_MAJOR_VERSION = "CMAKE_CACHE_MAJOR_VERSION";
+    public static final String CMAKE_CACHE_MINOR_VERSION = "CMAKE_CACHE_MINOR_VERSION";
+    public static final String CMAKE_BUILD_TYPE = "CMAKE_BUILD_TYPE";
+    
+    private String name;
+    private String type = STRING_TYPE;
+    private String value;
+    
+    public Variable() {
+    }
+    
+    public Variable(String name, String type, String value) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	/**
-	 * Returns the variable value as an integer.
-	 * 
-	 * @return the variable value as an integer.
-	 * 
-	 * @throws NumberFormatException if the value is not a valid integer.
-	 */
-	public int getIntValue() {
-		return Integer.parseInt(value);
-	}
+    /**
+     * Returns the variable value as an integer.
+     * 
+     * @return the variable value as an integer.
+     * 
+     * @throws NumberFormatException if the value is not a valid integer.
+     */
+    public int getIntValue() {
+        return Integer.parseInt(value);
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	@Override
-	public String toString() {
-		return name + ":" + type + "=" + value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
+    
+    @Override
+    public String toString() {
+        return name + ":" + type + "=" + value;
+    }
 
-	@Override
-	public boolean equals(Object rhs) {
-		if (rhs instanceof Variable) {
-			return equals((Variable) rhs);
-		}
-		return false;
-	}
-	
-	public boolean equals(Variable rhs) {
-		return equals(name, rhs.name) 
-			&& equals(type, rhs.type) 
-			&& equals(value, rhs.value);
-	}
-	
-	private boolean equals(String lhs, String rhs) {
-		if (lhs == null) {
-			return rhs == null;
-		}
-		return lhs.equals(rhs);
-	}
+    @Override
+    public boolean equals(Object rhs) {
+        if (rhs instanceof Variable) {
+            return equals((Variable) rhs);
+        }
+        return false;
+    }
+    
+    public boolean equals(Variable rhs) {
+        return equals(name, rhs.name) 
+            && equals(type, rhs.type) 
+            && equals(value, rhs.value);
+    }
+    
+    private boolean equals(String lhs, String rhs) {
+        if (lhs == null) {
+            return rhs == null;
+        }
+        return lhs.equals(rhs);
+    }
 }

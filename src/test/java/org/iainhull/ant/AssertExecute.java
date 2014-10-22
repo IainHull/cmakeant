@@ -44,9 +44,6 @@ public interface AssertExecute {
 		}
 		
 		public int assertCommand(List<String> commandLine, File workingDirectory) {
-			//System.out.println(commandLine);
-			//System.out.println(workingDirectory);
-			
 			assertEquals("Test command line", this.commandLine, commandLine);
 			assertEquals("Test working directory", this.workingDirectory, workingDirectory);
 			

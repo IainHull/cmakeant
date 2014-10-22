@@ -18,8 +18,8 @@
 package org.iainhull.ant;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Utility class to implement CmakeRule inheritence, this only supports 
@@ -92,7 +92,7 @@ public class CompositeParams implements Params {
 	
 
 	public Map<String, Variable> getVariables() {
-		Map<String, Variable> ret = new HashMap<String, Variable>(first.getVariables());
+		Map<String, Variable> ret = new TreeMap<String, Variable>(first.getVariables());
 		ret.putAll(second.getVariables());
 		return ret;
 	}
