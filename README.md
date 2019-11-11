@@ -17,22 +17,27 @@ You want to build cross platform c/c++ code with ant. This might be because your
 # Cmake
 
 ## Description
+
 Generates a cmake build, and runs the configured build tool.
 
 This task is used to integrate cmake based projects with a larger ant build.
 
-##Parameters
+## Parameters
+
 | Attribute | Description | Required |
 | --------- | ----------- | -------- |
 | srcdir | Location of the source directory, where the top level CMakeLists.txt file is found. | No, defaults to the current directory. |
 | bindir | Location to the binary directory, where the cmake output is written, this can be the same as the srcdir. | No, defaults to the current directory |
 | buildtype | The type of the build, Debug, Release, RelWithDebInfo or MinSizeRelComma. See notes on build type. | No |
 | cleanfirst | Call the clean target first when building. | No, defaults to false |
+| cmakecommand | The command/path used to to run cmake | No, defaults to cmake |
 | cmakeonly | When set to true, runs cmake but does not execute the build | No, defaults to false |
 | target | The target of the project to build | No, defaults to the generated all target |
 
-##Parameters specified as nested elements
-###generator
+## Parameters specified as nested elements
+
+### generator
+
 Specify the cmake generator to use for each platform. Child of cmake.
 
 | Attribute | Description | Required |
@@ -45,7 +50,8 @@ Specify the cmake generator to use for each platform. Child of cmake.
 | target | The target of the project to build | No, defaults to the top level target |
 | buildargs | Optional additional arguments passed to the build command, for example "-j 8" to enable make to use 8 cores | No |
 
-###variable
+### variable
+
 Set cmake variables.  If this is a child of the main cmake task then it the variable is set which ever generator is used.  If this or a child of the generator then it is specific to that generator.
 
 | Attribute | Description | Required |
@@ -54,7 +60,7 @@ Set cmake variables.  If this is a child of the main cmake task then it the vari
 | type | The type of the variable. Possible values STRING, FILEPATH, PATH, BOOL. | No, defaults to STRING | 
 | value | The value to set the variable. | Yes |  
 
-###readvar
+### readvar
 Read the value of a cmake cache variable to an ant varaiable. Child of cmake
 
 | Attribute | Description | Required | 
@@ -62,7 +68,7 @@ Read the value of a cmake cache variable to an ant varaiable. Child of cmake
 | name | The name of the variable to read. | Yes |  
 | property | The name of the ant property to set. | Yes | 
 
-##Examples
+## Examples
 
     <taskdef name="cmake" 
         classname="org.iainhull.ant.CmakeBuilder"/>
@@ -104,6 +110,7 @@ Runs cmake in the `${src}` directory and write the output to the `${binary}` dir
   * On all other plaforms the `Unix Makefiles` generator is used.
   * Finally after the build files are generated and the build is complete the value of the CMake variable `CMAKE_CXX_COMPILER` is read from the CMakeCache.txt and used to set the ant property `cxxCompilerPath`, this ant property can now be used later in the ant file.
 
-##Build Type Notes
-The buildtype attribute of the cmake and generator tags is used to set the cmake variable CMAKE_BUILD_TYPE.  This is usually one of Debug, Release, RelWithDebInfo or MinSizeRelComma see the Cmake documentation for
-the CMAKE_BUILD_TYPE and CMAKE_CONFIGURATION_TYPES for more information.
+## Build Type Notes
+
+The buildtype attribute of the cmake and generator tags is used to set the cmake variable `CMAKE_BUILD_TYPE`.  This is usually one of Debug, Release, RelWithDebInfo or MinSizeRelComma see the Cmake documentation for
+the `CMAKE_BUILD_TYPE` and `CMAKE_CONFIGURATION_TYPES` for more information.
