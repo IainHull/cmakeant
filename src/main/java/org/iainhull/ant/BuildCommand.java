@@ -39,8 +39,9 @@ public abstract class BuildCommand {
      * @param cmakeGenerator
      * @return the build command line for the CMake output.
      */
-    public static List<String> inferCommand(GeneratorRule generator, CacheVariables vars) {
-        BuildCommand [] commands = createBuildCommands(generator, vars);
+    public static List<String> inferCommand(String cmakeCommand, 
+            GeneratorRule generator, CacheVariables vars) {
+        BuildCommand [] commands = createBuildCommands(cmakeCommand, generator, vars);
         
         for (BuildCommand command : commands) {
             if (command.canBuild()) {
@@ -61,9 +62,9 @@ public abstract class BuildCommand {
      * @return true if the CMake generated build files support skipping the 
      *      Cmake Step if the build files are already generated.
      */
-    public static boolean canSkipCmakeStep(GeneratorRule generator,
+    public static boolean canSkipCmakeStep(String cmakeCommand, GeneratorRule generator,
             CacheVariables vars) {
-        BuildCommand [] commands = createBuildCommands(generator, vars);
+        BuildCommand [] commands = createBuildCommands(cmakeCommand, generator, vars);
         
         for (BuildCommand command : commands) {
             if (command.canBuild()) {
@@ -74,11 +75,11 @@ public abstract class BuildCommand {
         throw new BuildException("Cannot construct build command for: " + generator.getName());
     }
     
-    private static BuildCommand[] createBuildCommands(GeneratorRule generator,
-            CacheVariables vars) {
+    private static BuildCommand[] createBuildCommands(String cmakeCommand,
+            GeneratorRule generator, CacheVariables vars) {
         
         if (CMakeBuildCommand.isSupported(vars)) {
-            return new BuildCommand [] { new CMakeBuildCommand(generator, vars) };
+            return new BuildCommand [] { new CMakeBuildCommand(cmakeCommand, generator, vars) };
         } else {    
             return new BuildCommand [] {
                     new VisualStudioBuildCommand(generator, vars),

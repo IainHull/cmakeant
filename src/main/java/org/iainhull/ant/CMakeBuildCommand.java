@@ -5,10 +5,13 @@ import java.util.List;
 
 public class CMakeBuildCommand extends BuildCommand {
 	private final boolean canSkipCmakeStep; 
+	private final String cmakeCommand;
 	
 	
-	public CMakeBuildCommand(GeneratorRule generator, CacheVariables vars) {
+	public CMakeBuildCommand(String cmakeCommand, GeneratorRule generator, CacheVariables vars) {
 		super(generator, vars);
+		this.cmakeCommand = cmakeCommand;
+
 		canSkipCmakeStep = ! isVisualStudio(vars.getVariable(Variable.CMAKE_GENERATOR).getValue());
 		assert isSupported(vars);
 	}
@@ -20,7 +23,7 @@ public class CMakeBuildCommand extends BuildCommand {
 	@Override
 	protected List<String> buildCommand() {
 		List<String> ret = new ArrayList<String>();
-		ret.add(CmakeBuilder.CMAKE_COMMAND);
+		ret.add(cmakeCommand);
 		ret.add("--build");
 		ret.add(generator.getBindir().toString());
 		

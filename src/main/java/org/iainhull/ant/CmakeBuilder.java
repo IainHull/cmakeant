@@ -45,6 +45,7 @@ public class CmakeBuilder extends Task implements Params {
 	private List<GeneratorRule> genRules = new ArrayList<GeneratorRule>();
 	private List<ReadVariable> readVars = new ArrayList<ReadVariable>();
 	private boolean cmakeonly = false;
+	private String cmakeCommand = CMAKE_COMMAND;
 
 	/**
 	 * Create a new CmakeBuilder
@@ -102,7 +103,7 @@ public class CmakeBuilder extends Task implements Params {
 		if (cache.exists() && cache.canRead())
 		{
 			CacheVariables vars = readCacheVariables(rule.getBindir());	
-			return BuildCommand.canSkipCmakeStep(rule, vars);
+			return BuildCommand.canSkipCmakeStep(cmakeCommand, rule, vars);
 		}
 		return false;
 	}
@@ -123,6 +124,24 @@ public class CmakeBuilder extends Task implements Params {
 	 */
 	public void setSrcdir(File sourceDir) {
 		this.sourceDir = sourceDir;
+	}
+
+	/**
+	 * Get the cmake command/path used to launch cmake commands (defaults to CMAKE_COMMAND).
+	 *  
+	 * @return the command
+	 */
+	public String getCmakecommand() {
+		return this.cmakeCommand;
+	}
+
+	/**
+	 * Set the cmake command/path used to launch cmake commands (defaults to CMAKE_COMMAND).
+	 *  
+	 * @param cmakeCommand the source directory
+	 */
+	public void setCmakecommand(String cmakeCommand) {
+		this.cmakeCommand = cmakeCommand;
 	}
 
 	/**
@@ -206,7 +225,7 @@ public class CmakeBuilder extends Task implements Params {
 
 	private void executeCmake(GeneratorRule rule) {
 		List<String> commandLine = new ArrayList<String>();
-		commandLine.add(CMAKE_COMMAND);
+		commandLine.add(cmakeCommand);
 		if (rule.getName() != null) {
 			commandLine.add("-G");
 			commandLine.add(rule.getName());
@@ -254,7 +273,7 @@ public class CmakeBuilder extends Task implements Params {
 	private void executeBuild(GeneratorRule rule, CacheVariables vars) {
 		try {
 			log("Building cmake output");
-			List<String> command = BuildCommand.inferCommand(rule, vars); 
+			List<String> command = BuildCommand.inferCommand(cmakeCommand, rule, vars); 
 			int ret = doExecute(command, rule.getBindir());
 			
 			if (ret != 0) {

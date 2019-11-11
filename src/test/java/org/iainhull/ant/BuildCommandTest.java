@@ -50,6 +50,7 @@ public class BuildCommandTest {
 		vars.addVariable(new Variable(Variable.CMAKE_GENERATOR, Variable.STRING_TYPE, "Unix Makefiles"));
 
 		BuildCommand b = new CMakeBuildCommand(
+			  CmakeBuilder.CMAKE_COMMAND,
 				generator, 
 				vars );
 
