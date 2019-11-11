@@ -114,3 +114,15 @@ Runs cmake in the `${src}` directory and write the output to the `${binary}` dir
 
 The buildtype attribute of the cmake and generator tags is used to set the cmake variable `CMAKE_BUILD_TYPE`.  This is usually one of Debug, Release, RelWithDebInfo or MinSizeRelComma see the Cmake documentation for
 the `CMAKE_BUILD_TYPE` and `CMAKE_CONFIGURATION_TYPES` for more information.
+
+# Building cmakeant
+
+This code is very old (the repo contains the binaries required to build it - the horror). It is built with ant:
+
+    java -jar lib/ant-launcher.jar
+
+This creates a single jar `./build/cmakeant.jar`
+
+To run the tests use:
+
+    java -jar lib/ant-launcher.jar junit
